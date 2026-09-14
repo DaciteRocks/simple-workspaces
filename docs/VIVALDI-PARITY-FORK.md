@@ -215,6 +215,15 @@ distinguished, so the add-on also gets its own icon.
   and could break Start sync, and it was reverted once sync was disabled.
 - **No remote requests:** `Extensions.loadIconUrl` no longer fetches add-on icons from the AMO API, and the
   About page's plugin icons use the local generic icon instead of addons.mozilla.org. `MOZILLA_API` removed.
+- **Review (phase-review + code-review, two rounds):** round 1 on the consent draft kept the daily
+  notification on every install (both reviewers), plugin icons loading from addons.mozilla.org and "sync off
+  by default" being false (phase-review); noted the content script description and a consent message wiped
+  by a 30 s poll. Dropped: a second consent request breaking Start sync, the untracked lockfile. The consent
+  code was then reverted with sync disabled. Round 2 on the disable commit found no reachable sync path
+  (both). Kept: the privacy policy wrongly said backups only run when turned on, while daily backups to
+  Downloads are on by default (phase-review; policy corrected, default left as upstream's). Noted and fixed:
+  the container help page fetched `<origin>/favicon.ico` itself (phase-review), and a `start-cloud-sync`
+  hotkey from an upstream backup showed a blank action (both; imports now drop unknown actions).
 - **Privacy policy:** `docs/PRIVACY.md`, also pasted into the listing.
 - **Build for AMO:** `build-for-amo` npm script, `addon/README.md` rewritten as reviewer build notes
   (Windows 11, Node 20.19.6, npm 10.8.2, `npm ci` then `npm run build-for-amo`, output `dist/`).

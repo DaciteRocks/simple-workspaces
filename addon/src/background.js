@@ -1477,6 +1477,11 @@ async function restoreBackup(data, clearAddonDataBeforeRestore = false) {
     data.hotkeys = [...currentData.hotkeys, ...data.hotkeys];
 
     data.hotkeys = data.hotkeys.filter((hotkey, index, self) => {
+        // an action this build does not offer (start-cloud-sync from an upstream backup) would show a blank select
+        if (hotkey.action && !Constants.HOTKEY_ACTIONS.includes(hotkey.action)) {
+            return false;
+        }
+
         return self.findIndex(h => h.value === hotkey.value) === index;
     });
 

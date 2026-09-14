@@ -26,8 +26,10 @@ None of this leaves your device through the add-on. It is removed when you unins
 
 ## Optional features, all on your device
 
-- **Backups** are saved as files in your Downloads folder, only when you create one or turn on automatic
-  backups.
+- **Backups** are saved as files in your Downloads folder. Automatic backups are **on by default**: once a
+  day the add-on saves a backup of your workspaces, including tab addresses, titles, site icons and
+  thumbnails. You can turn this off, change how often it runs, or leave out icons and thumbnails in
+  Settings, on the Backup tab. The files stay on your computer.
 - **Bookmark export** writes workspaces to your Firefox bookmarks. It needs the optional bookmarks
   permission, which Firefox asks for.
 - **Thumbnails** of tabs are captured and kept locally.

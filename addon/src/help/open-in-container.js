@@ -110,10 +110,8 @@ async function init() {
     $('#helpPageOpenInContainerDesc3')[INNER_HTML] = Lang('helpPageOpenInContainerDesc3', [safeHtml(anotherContainer.name), safeHtml(conflictedExt.name)]);
     applyContainerStyles($('#helpPageOpenInContainerDesc3'), anotherContainer);
 
-    // load favicon
-    const redirectImg = $('#redirect-img');
-    redirectImg.addEventListener('load', () => redirectImg.hidden = false);
-    redirectImg.src = new URL(url).origin + '/favicon.ico';
+    // no favicon: loading <origin>/favicon.ico would be a request of the add-on's own to that site
+    // (docs/PRIVACY.md); #redirect-img stays hidden
 
     if (asInfo) {
         $('main').classList.add('as-info');
