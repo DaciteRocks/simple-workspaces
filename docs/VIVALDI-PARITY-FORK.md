@@ -66,7 +66,7 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | ----- | ----- | ------ |
 | 0 | Recon; spec into repo; branch `vivaldi-parity` | done 2026-09-14 |
 | 1 | §4.4 single-active: `js/groups-native-exclusive.js`; option `singleExpandedNativeGroup` (default **on**) with Options UI + en locale | done 2026-09-14 (see 0.4) |
-| 2 | Fork identity: manifest id/name/version, README section for building/loading/signing, `chrome/userChrome.css` companion committed with install notes | pending |
+| 2 | Fork identity: manifest id/name/version, README section for building/loading/signing, `chrome/userChrome.css` companion committed with install notes | done 2026-09-14 (see 0.5) |
 | 3 | Edge cases (§5) audit against upstream behavior + manual test checklist for the user (switch, restart, single-active, header drag, pinned) | pending |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
@@ -97,6 +97,21 @@ Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-imp
   proposed shared "defer while busy" helper — it would refactor upstream code in `groups-native.js`
   and raise merge cost for a duplicate that is 15 lines.
 - **Locales:** English only; ru/uk fall back to `default_locale` via `i18n.getMessage`.
+
+### 0.5 Phase 2 — what landed
+
+- **Manifest identity:** id `simple-tab-groups-vivaldi@dacite.dev`, name "Simple Tab Groups - Vivaldi
+  Fork", short name `STG-V`, version `6.0.0.1` (digits only, AMO-safe). A distinct id is required to
+  sign the fork as an unlisted AMO add-on (§6). Consequences: storage is per id, so an upstream STG
+  backup must be exported and imported once (README); STG plugins message the upstream id and do not
+  see the fork; `homepage_url` still points at upstream until a GitHub fork exists.
+- **Packaging:** `npm run build-zip` now works (upstream imported a non-existent `webpack.config.mjs`);
+  it produces `addon/dist-zip/<id>-v<version>-{prod,dev}.zip`, the prod zip is what gets uploaded to
+  AMO. `npm run dev` added as an alias of `watch`.
+- **Companion CSS:** `chrome/userChrome.css` (the v6 file from §8) with `chrome/README.md` install
+  notes. The profile path in §8 is machine-specific; the README describes the generic path.
+- **Not done here:** the actual AMO submission (needs the user's developer account) and the GitHub
+  fork / `origin` remote.
 
 ---
 

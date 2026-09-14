@@ -5,6 +5,23 @@
 
 [![Mozilla Add-on](https://img.shields.io/amo/v/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/) [![downloads](https://img.shields.io/amo/dw/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/statistics/?last=365) [![users](https://img.shields.io/amo/users/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/statistics/usage/?last=365) [![rating](https://img.shields.io/amo/rating/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/reviews/)
 
+> **This is the Vivaldi-parity fork** of Simple Tab Groups, not the upstream add-on. It adds a
+> Vivaldi-style *single-active* rule for Firefox native tab groups (open one group and the previously
+> open one collapses) on top of upstream's native-group persistence, and ships as a separately signed
+> add-on (`simple-tab-groups-vivaldi@dacite.dev`). Design, status and phases:
+> [`docs/VIVALDI-PARITY-FORK.md`](docs/VIVALDI-PARITY-FORK.md). Companion tab-bar stylesheet:
+> [`chrome/`](chrome/README.md). Upstream: <https://github.com/Drive4ik/simple-tab-groups>.
+>
+> **Migrating from upstream STG:** the fork has its own add-on id, so it starts with empty storage.
+> In upstream STG create a backup (Options → Backup → Export), install the fork, then import that
+> file in the fork's options. STG plugins (group notes, etc.) talk to the upstream id and will not see
+> the fork.
+>
+> Build: `cd addon && npm install && npm run build`, then `about:debugging` → *Load Temporary
+> Add-on* → `addon/dist/manifest.json`. `npm run dev` rebuilds on change. `npm run build-zip` produces
+> the zips in `addon/dist-zip/` for signing as an **unlisted** add-on on
+> <https://addons.mozilla.org/developers/>.
+
 ## Translations
 
 Please, help me [translate this addon](https://drive4ik.github.io/simple-tab-groups/translate/index.html) into your language!

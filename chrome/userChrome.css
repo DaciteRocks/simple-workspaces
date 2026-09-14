@@ -1,0 +1,74 @@
+/* =====================================================================
+   Vivaldi-style two-level tab bar for Firefox 155+  (v6 - reliable baseline)
+   ---------------------------------------------------------------------
+   An EXPANDED group is lifted out of the flow and pinned as an OPAQUE
+   full-width bar at the bottom, so it never pushes other tabs/pills around.
+   The group that holds the ACTIVE tab is drawn on top, so when more than one
+   group is expanded you cleanly see the one you're actually using.
+
+   How to use it (CSS-level flow):
+   - Click a group's pill  -> it expands and drops to the bottom bar.
+   - Click another group's pill -> it opens on the bottom bar (drawn on top).
+   - Collapse the previous group's pill to send it back up.
+
+   NOTE: Automatically collapsing the previous group ("true replace") is not
+   possible in pure CSS — Firefox won't auto-collapse groups. That behavior is
+   handled by the Simple Tab Groups fork (JS). This file is the styling layer.
+   ===================================================================== */
+
+:root{
+  --uc-group-bar-height: calc(var(--tab-min-height, 36px) + 8px);
+  --uc-group-tab-min-width: 120px;
+  --uc-group-tab-max-width: 260px;
+}
+
+/* Positioning context for the bottom bar */
+#tabbrowser-tabs[orient="horizontal"]{
+  position: relative !important;
+  min-height: unset !important;
+}
+
+/* Reserve one bottom row while any group is expanded */
+#tabbrowser-tabs[orient="horizontal"]:has(tab-group:not([collapsed])){
+  padding-bottom: var(--uc-group-bar-height) !important;
+}
+
+/* An expanded group becomes an OPAQUE full-width bar pinned to the bottom,
+   out of normal flow so it never pushes other pills / ungrouped tabs around. */
+#tabbrowser-tabs[orient="horizontal"] tab-group:not([collapsed]){
+  position: absolute !important;
+  inset: auto 0 0 0 !important;
+  width: 100% !important;
+  height: var(--uc-group-bar-height) !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  gap: 2px !important;
+  padding: 2px 6px !important;
+  border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent) !important;
+  background: var(--toolbar-bgcolor, #2b2a33) !important;   /* opaque so overlaps don't show through */
+  z-index: 2 !important;
+  scrollbar-width: thin !important;
+}
+
+/* The group holding the ACTIVE tab is drawn ON TOP of any other expanded
+   group, so the one you're actually using is the one you see. */
+#tabbrowser-tabs[orient="horizontal"] tab-group:not([collapsed]):has(.tabbrowser-tab[visuallyselected]){
+  z-index: 3 !important;
+}
+
+/* The group's label sits at the start of the bottom bar as a heading */
+#tabbrowser-tabs[orient="horizontal"] tab-group:not([collapsed]) .tab-group-label-container{
+  flex: 0 0 auto !important;
+  margin-inline-end: 4px !important;
+}
+
+/* Tabs inside the bottom bar: comfortable fixed-ish width, scroll if many */
+#tabbrowser-tabs[orient="horizontal"] tab-group:not([collapsed]) .tabbrowser-tab[fadein]{
+  min-width: var(--uc-group-tab-min-width) !important;
+  max-width: var(--uc-group-tab-max-width) !important;
+  flex: 0 0 auto !important;
+}
