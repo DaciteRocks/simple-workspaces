@@ -8,10 +8,9 @@ based on Simple Tab Groups by Drive4ik and is published under the Mozilla Public
 
 ## The short version
 
-- The developer of Simple Workspaces receives **no data** from you. There is no analytics, telemetry,
-  tracking, advertising or developer server.
-- Everything stays in your Firefox profile **unless you turn on GitHub Gist cloud sync**, which sends your
-  workspaces to **your own** GitHub account and only after Firefox asks for your permission.
+Simple Workspaces does not collect, transmit or sell any data. There is no analytics, telemetry,
+tracking, advertising, account or developer server. Everything the add-on stores stays in your Firefox
+profile.
 
 ## Data stored on your device
 
@@ -23,56 +22,33 @@ session data for each tab:
 - which Firefox tab group each tab belongs to, and the groups' titles, colors and collapsed state;
 - your add-on settings.
 
-This data never leaves your device through the add-on, except as described under cloud sync below. It is
-removed when you uninstall the add-on.
+None of this leaves your device through the add-on. It is removed when you uninstall the add-on.
 
-## Optional: GitHub Gist cloud sync
+## Optional features, all on your device
 
-Cloud sync is **off by default**. When you turn it on, Firefox shows a permission prompt for three kinds
-of data. Sync does not run unless you allow it, and you can withdraw the permission at any time in
-`about:addons` → Simple Workspaces → Permissions.
-
-| Data | Why it is sent | Firefox category |
-| - | - | - |
-| Your GitHub personal access token | To sign in to your GitHub account | Authentication information |
-| Tab URLs and titles, workspace names, container names and settings | This is what gets synced | Browsing activity |
-| Site icons, only if "include tab icons" is enabled | To show icons on your other computers | Website content |
-
-Where it goes:
-
-- Only to `api.github.com`, into a **secret gist in your own GitHub account**. A secret gist is not listed
-  publicly, but anyone who has its link can open it. It is not encrypted by the add-on.
-- The token itself is stored either locally in the add-on or, if you choose that option, in Firefox Sync,
-  which Mozilla encrypts and stores for you. The token is not written into the gist.
-- GitHub's handling of that data is covered by the
-  [GitHub General Privacy Statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement).
-
-To remove synced data, delete the gist from your GitHub account and revoke the token on GitHub.
-
-## Other optional features that stay on your device
-
-- **Backups** are saved as files in your Downloads folder. The Simple Tab Groups Windows helper app
-  (STGHost), which writes backups to a local folder, only accepts the original add-on and does not work
-  with Simple Workspaces.
+- **Backups** are saved as files in your Downloads folder, only when you create one or turn on automatic
+  backups.
 - **Bookmark export** writes workspaces to your Firefox bookmarks. It needs the optional bookmarks
   permission, which Firefox asks for.
 - **Thumbnails** of tabs are captured and kept locally.
 
-## Network requests the add-on makes
+Simple Tab Groups' GitHub Gist cloud sync is switched off in Simple Workspaces and cannot be enabled. Its
+Windows backup helper app (STGHost) only accepts the original add-on and does not work with Simple
+Workspaces.
 
-- `api.github.com` — only when you use GitHub Gist sync, after consent. The sync settings page then also
-  shows your GitHub profile picture, which Firefox loads from GitHub.
-- Site icons of tabs you already have open may be displayed in the add-on's popup and pages; Firefox
-  loads those from the sites themselves, as it does for the tab bar.
-- Nothing else. The add-on does not contact the developer, Mozilla or any other service. Web pages you
-  open load as they normally would; the add-on does not read or send their content.
+## Network requests
+
+The add-on itself makes no network requests. It does not contact the developer, Mozilla, GitHub or any
+other service. Site icons of tabs you already have open may be shown in the add-on's popup and pages;
+Firefox loads those from the sites themselves, as it does for the tab bar. Web pages you open load as they
+normally would, and the add-on does not read or send their content.
 
 ## Permissions
 
 Firefox shows the permissions the add-on requests at install. They are used only for the add-on's own
-features: managing, hiding and grouping tabs; opening tabs in the right container; menus, notifications
-and hotkeys; saving backups; and detecting other tab add-ons that conflict with it. None of them is used
-to send data anywhere.
+features: managing, hiding and grouping tabs; opening tabs in the right container; its menus,
+notifications, hotkeys and in-page group picker; saving backups; and detecting other tab add-ons that
+conflict with it. None of them is used to send data anywhere.
 
 ## Children
 

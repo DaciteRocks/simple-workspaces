@@ -4,8 +4,6 @@ import {objectToNativeError} from '/js/logger.js';
 import * as Constants from '/js/constants.js';
 import * as Utils from '/js/utils.js';
 import * as Cloud from '/js/sync/cloud/cloud.js';
-import * as Permissions from '/js/permissions.js';
-import Lang from '/js/lang.js';
 
 // const MODULE_NAME = 'sync-cloud.mixin';
 // const logger = new Logger(MODULE_NAME, [Utils.getNameFromPath(location.href)]);
@@ -75,15 +73,6 @@ export default {
             clearTimeout(this.syncCloudUpdateInfoTimer);
             clearTimeout(this.syncCloudProgressTimer);
             clearTimeout(this.syncCloudInProgressTimer);
-        },
-        // for direct click/keydown handlers: the consent prompt needs user input, so it runs first
-        async syncCloudWithConsent(trust, revision) {
-            if (!await Permissions.requestDataCollection(Permissions.CLOUD_SYNC_DATA_COLLECTION)) {
-                this.syncCloudErrorMessage = Lang('syncNeedsDataConsent');
-                return {ok: false};
-            }
-
-            return this.syncCloud(trust, revision);
         },
         async syncCloud(trust, revision) {
             return await this.sendMessageModule('BG.cloudSync', {trust, revision});

@@ -46,19 +46,3 @@ function normalize({permissions, origins}) {
         origins: new Set(origins),
     };
 }
-
-// Optional data collection (Firefox built-in data consent, Firefox 140+). Only GitHub Gist sync sends data
-// off the device: the user's token (authenticationInfo), tab urls and titles (browsingActivity) and, when
-// enabled, favicons (websiteContent). Declared optional in manifest.json, granted per user. docs/PRIVACY.md
-export const CLOUD_SYNC_DATA_COLLECTION = Object.freeze(['authenticationInfo', 'browsingActivity', 'websiteContent']);
-
-export async function hasDataCollection(categories) {
-    const {data_collection: granted = []} = await browser.permissions.getAll();
-    return categories.every(category => granted.includes(category));
-}
-
-// permissions.request needs user input: call it from a click/keydown handler BEFORE any other await.
-// Already granted categories resolve true without a prompt
-export async function requestDataCollection(categories) {
-    return browser.permissions.request({data_collection: [...categories]});
-}

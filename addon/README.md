@@ -40,11 +40,10 @@ This creates `dist-zip/simple-workspaces@dacite.dev-v<version>-prod.zip` (the pa
 
 ## Data collection
 
-`browser_specific_settings.gecko.data_collection_permissions` declares `required: ["none"]` and optional
-`authenticationInfo`, `browsingActivity` and `websiteContent`. They cover the opt-in GitHub Gist sync only.
-Consent is requested with `permissions.request({data_collection})` from the click that enables or starts
-sync (`src/js/permissions.js`), and `src/js/sync/cloud/cloud.js` refuses to sync without it. The add-on
-makes no other network requests.
+`browser_specific_settings.gecko.data_collection_permissions` declares `required: ["none"]`. The add-on
+makes no network requests of its own. Upstream's GitHub Gist cloud sync is disabled by
+`CLOUD_SYNC_AVAILABLE = false` in `src/js/constants.js`: its UI, hotkey, menu item and background alarm are
+off, and its code is kept only to ease merging upstream changes.
 
 ## Third-party libraries
 

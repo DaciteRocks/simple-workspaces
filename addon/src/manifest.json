@@ -6,8 +6,7 @@
             "id": "simple-workspaces@dacite.dev",
             "strict_min_version": "140.0",
             "data_collection_permissions": {
-                "required": ["none"],
-                "optional": ["authenticationInfo", "browsingActivity", "websiteContent"]
+                "required": ["none"]
             }
         }
     },
@@ -159,9 +158,6 @@
         },
         "create-backup": {
             "description": "__MSG_exportAddonSettingsButton__"
-        },
-        "start-cloud-sync": {
-            "description": "__MSG_syncStart__"
         }
     }
 

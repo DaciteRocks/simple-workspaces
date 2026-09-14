@@ -70,6 +70,7 @@ export default {
         this.HOTKEY_ACTIONS = Constants.HOTKEY_ACTIONS;
         this.HOTKEY_ACTIONS_WITH_CUSTOM_GROUP = Constants.HOTKEY_ACTIONS_WITH_CUSTOM_GROUP;
         this.INTERVAL_KEY = Constants.INTERVAL_KEY;
+        this.CLOUD_SYNC_AVAILABLE = Constants.CLOUD_SYNC_AVAILABLE;
 
         this.PLUGINS = Object.fromEntries(
             Object.entries(Constants.EXTENSIONS_WHITE_LIST).filter(([id]) => id.startsWith('stg'))
@@ -257,12 +258,6 @@ export default {
         },
     },
     methods: {
-        // turning sync on asks for data consent right in the click; declined leaves sync off
-        async onSyncEnableChange(event) {
-            if (event.target.checked && !await Permissions.requestDataCollection(Permissions.CLOUD_SYNC_DATA_COLLECTION)) {
-                this.options.syncEnable = false;
-            }
-        },
         addCustomWatchers() {
             this.optionsWatch('autoBackupLocation', value => {
                 if (value === this.AUTO_BACKUP_LOCATIONS.HOST) {
@@ -781,9 +776,9 @@ export default {
         isEnabledExtension(id) {
             return Extensions.isEnabled(id);
         },
-        getPluginIcon(id) {
-            const firstPart = String(id).slice(0, -3);
-            return `https://addons.mozilla.org/user-media/addon_icons/${firstPart}/${id}-64.png`;
+        // no remote icons: loading them from addons.mozilla.org would contact Mozilla (docs/PRIVACY.md)
+        getPluginIcon() {
+            return '/icons/extension-generic.svg';
         },
     },
 }
@@ -1315,12 +1310,13 @@ export default {
             </template>
         </div>
 
+        <template v-if="CLOUD_SYNC_AVAILABLE">
         <hr>
 
         <div id="sync-block" class="field">
             <div class="field">
                 <label class="checkbox">
-                    <input v-model="options.syncEnable" type="checkbox" @change="onSyncEnableChange" />
+                    <input v-model="options.syncEnable" type="checkbox" />
                     <span v-text="lang('syncEnableTitle')"></span>
                 </label>
             </div>
@@ -1357,6 +1353,7 @@ export default {
                 <github-gist></github-gist>
             </template>
         </div>
+        </template>
 
         <hr>
 

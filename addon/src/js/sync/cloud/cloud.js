@@ -19,7 +19,6 @@ import * as CloudBroadcast from '/js/broadcast.js?channel=cloud';
 import * as SyncStorage from '../sync-storage.js';
 import * as NewCloudGroups from '../new-cloud-groups.js';
 import * as Storage from '/js/storage.js';
-import * as Permissions from '/js/permissions.js';
 import Migration, {stampVersion} from '/js/migration.js';
 import backgroundSelf from '/js/background.js';
 // export {
@@ -80,11 +79,6 @@ export async function synchronization(trust = null, revision = null) {
         inProgress = true;
 
         send('sync-start');
-
-        // every trigger lands here (alarm, retry, hotkey, UI): no transfer without the user's data consent
-        if (!await Permissions.hasDataCollection(Permissions.CLOUD_SYNC_DATA_COLLECTION)) {
-            throw new CloudError('syncNeedsDataConsent');
-        }
 
         const syncRes = await Operations.run('cloud-sync', () => sync(trust, revision, progress => {
             lastProgress = progress;

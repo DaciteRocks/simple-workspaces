@@ -41,17 +41,16 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 >   bar. Instructions are in the source repository.
 >
 > **Also included**
-> - Containers per workspace, archive, bookmarks export, backups, and optional sync through a secret
->   GitHub Gist in your own account.
+> - Containers per workspace, archive, bookmarks export and backups.
 >
-> **Privacy:** no analytics and no developer server. Nothing leaves your computer unless you turn on
-> GitHub Gist sync, which Firefox asks your permission for first.
+> **Privacy:** collects nothing and sends nothing. No analytics, no accounts, no developer server.
 >
 > **Credits:** based on Simple Tab Groups by Drive4ik, licensed under the Mozilla Public License 2.0.
 > Source code: https://github.com/DaciteRocks/simple-workspaces
 >
-> **Known limitations:** some non-English translations still say "STG". Simple Tab Groups plugins and
-> its Windows backup helper do not work with this add-on. Do not run it together with Simple Tab Groups.
+> **Known limitations:** some non-English translations still say "STG". Simple Tab Groups' cloud sync is
+> switched off, and its plugins and Windows backup helper do not work with this add-on. Do not run it
+> together with Simple Tab Groups.
 
 **Categories:** Tabs
 
@@ -61,7 +60,8 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 
 **License:** Mozilla Public License 2.0
 
-**Privacy policy:** check "This add-on has a privacy policy" and paste the full text of `docs/PRIVACY.md`.
+**Privacy policy:** optional, since the add-on collects no data. Pasting `docs/PRIVACY.md` is still
+recommended so users can see that.
 
 ## Additional details
 
@@ -89,19 +89,21 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 ## Notes to reviewer
 
 > This is a fork of Simple Tab Groups (MPL-2.0) with a new name, icon and add-on id, plus a module that
-> keeps one native tab group expanded per window (`src/js/groups-native-exclusive.js`).
+> keeps one native tab group expanded per window (`src/js/groups-native-exclusive.js`). Upstream's GitHub
+> Gist cloud sync is disabled by `CLOUD_SYNC_AVAILABLE = false` in `src/js/constants.js`; its code is kept
+> for merges but its UI, hotkey, menu item and background alarm are off.
 >
 > Build instructions are in the source archive's README.md: `npm ci` then `npm run build-for-amo`, output
 > in `dist/`. No minification.
 >
-> Data collection: `required: ["none"]`, optional `authenticationInfo`, `browsingActivity`,
-> `websiteContent`, used only by opt-in GitHub Gist sync. Consent is requested with
-> `permissions.request({data_collection})` from the enabling click (`src/js/permissions.js`), and sync
-> refuses to run without it (`src/js/sync/cloud/cloud.js`). No other network requests.
+> Data collection: `required: ["none"]`. The add-on makes no network requests of its own; the plugin
+> icons on the About page and the conflicting add-on icons use a local generic icon instead of
+> addons.mozilla.org.
 >
 > Permissions: `tabs`, `tabHide`, `tabGroups`, `sessions` manage and hide workspace tabs and their groups;
 > `contextualIdentities`, `cookies`, `webRequest`, `webRequestBlocking`, `<all_urls>` reopen a tab in its
-> workspace's container; the content script on all pages only listens for the add-on's own hotkeys;
+> workspace's container; the content script on all pages listens for the add-on's own hotkeys and draws its in-page group picker
+> and prompt dialogs;
 > `menus`, `notifications`, `alarms` for context menus, messages and scheduled backups; `downloads` saves
 > backup files; `management` detects conflicting tab add-ons; `storage`, `unlimitedStorage` store
 > workspaces. Optional: `bookmarks` for bookmark export, `nativeMessaging` for the local backup helper,

@@ -69,7 +69,7 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | 2 | Fork identity: manifest id/name/version, README section for building/loading/signing, `chrome/userChrome.css` companion committed with install notes | done 2026-09-14 (see 0.5) |
 | 3 | Edge cases (§5) audit against upstream behavior + manual test checklist for the user (switch, restart, single-active, header drag, pinned) | done 2026-09-14 (see 0.6); manual tests not yet run |
 | 4 | Rename to **Simple Workspaces**: display name, add-on id `simple-workspaces@dacite.dev`, short name, homepage, GitHub repo `DaciteRocks/simple-workspaces` | done 2026-09-14 (see 0.7) |
-| 5 | Publishing prep for a **listed** AMO release: new icon, optional data-collection consent for Gist sync, privacy policy, `build-for-amo` script and reviewer README, listing draft, repo default branch | done 2026-09-14 (see 0.8); consent prompt not yet exercised in a live Firefox |
+| 5 | Publishing prep for a **listed** AMO release: new icon, Gist sync disabled and no data collection, privacy policy, `build-for-amo` script and reviewer README, listing draft, repo default branch | done 2026-09-14 (see 0.8); not yet exercised in a live Firefox |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
 
@@ -205,17 +205,16 @@ distinguished, so the add-on also gets its own icon.
 - **Icon:** `addon/src/icons/icon.svg` and `icon-animate.svg` redrawn. A workspace window in front with a
   two-level tab bar and another workspace behind it. Single `context-fill` color, so it follows the
   toolbar theme like upstream's. Checked at 128/48/32/16 px on light and dark backgrounds.
-- **Data consent (Firefox 140+ built-in):** manifest declares `required: ["none"]` and optional
-  `authenticationInfo`, `browsingActivity`, `websiteContent`, which cover opt-in GitHub Gist sync only.
-  - Helpers `Permissions.hasDataCollection` / `requestDataCollection` in `js/permissions.js`.
-  - Prompt from the user's click, before any other await: sync-enable checkbox (`Options.vue`), popup sync
-    button (`syncCloudWithConsent` in the sync mixin), Gist settings save / start / restore
-    (`github-gist.vue`).
-  - Hard guard in `Cloud.synchronization`: every trigger (alarm, retry, hotkey, UI) throws
-    `syncNeedsDataConsent` without consent. The Gist settings page no longer calls GitHub on open
-    without consent.
-  - Removed the one other network request: `Extensions.loadIconUrl` fetched add-on icons from the AMO
-    API, which would send installed add-on ids; it now returns the generic icon. `MOZILLA_API` removed.
+- **Cloud sync disabled (user decision, 2026-09-14):** upstream's GitHub Gist sync is not needed for the
+  fork's goals. `CLOUD_SYNC_AVAILABLE = false` in `js/constants.js` hides the Settings sync section, the popup
+  sync button and menu item, the group editor's "upload to cloud" option and the sync hotkey; background
+  `resetSyncAlarm` never arms the alarm and `cloudSync` returns early. The `start-cloud-sync` manifest
+  command is removed. Upstream's sync code is kept untouched for merges.
+- **No data collection:** manifest declares `data_collection_permissions: {required: ["none"]}`. An earlier
+  draft of this phase added optional consent for Gist sync; review found it notified every install daily
+  and could break Start sync, and it was reverted once sync was disabled.
+- **No remote requests:** `Extensions.loadIconUrl` no longer fetches add-on icons from the AMO API, and the
+  About page's plugin icons use the local generic icon instead of addons.mozilla.org. `MOZILLA_API` removed.
 - **Privacy policy:** `docs/PRIVACY.md`, also pasted into the listing.
 - **Build for AMO:** `build-for-amo` npm script, `addon/README.md` rewritten as reviewer build notes
   (Windows 11, Node 20.19.6, npm 10.8.2, `npm ci` then `npm run build-for-amo`, output `dist/`).
@@ -223,8 +222,8 @@ distinguished, so the add-on also gets its own icon.
   credit and known limitations, category, support links, screenshot list, version notes, reviewer notes
   with a per-permission explanation.
 - **GitHub:** default branch set to `vivaldi-parity`.
-- **Not verified:** the consent prompt and the sync guard were not exercised in a running Firefox;
-  AMO's default build environment (Ubuntu, Node 24) was not tried. Screenshots still have to be taken.
+- **Not verified:** nothing in this phase was exercised in a running Firefox; AMO's default build
+  environment (Ubuntu, Node 24) was not tried. Screenshots still have to be taken.
 
 ---
 

@@ -126,6 +126,11 @@ export const DEFAULT_BOOKMARKS_PARENTS = Object.freeze([
     'unfiled_____',
 ]);
 
+// GitHub Gist cloud sync (upstream feature) is switched off in Simple Workspaces: it is not needed for
+// the fork's goals, and with it off the add-on sends no data anywhere (docs/PRIVACY.md). The upstream code
+// stays in place for easy merges; this flag hides its UI, hotkey and menu item and stops the background.
+export const CLOUD_SYNC_AVAILABLE = false;
+
 export const HOTKEY_ACTIONS = Object.freeze([
     'load-next-group',
     'load-prev-group',
@@ -146,7 +151,7 @@ export const HOTKEY_ACTIONS = Object.freeze([
     'discard-group',
     'discard-other-groups',
     'reload-all-tabs-in-current-group',
-    'start-cloud-sync',
+    ...(CLOUD_SYNC_AVAILABLE ? ['start-cloud-sync'] : []),
 ]);
 
 export const HOTKEY_ACTIONS_WITH_CUSTOM_GROUP = Object.freeze([
@@ -180,7 +185,8 @@ export const POPUP_SETTINGS_MENU_ITEMS = Object.freeze([
         optionsCheckbox: true,
     }, {
         key: 'hr',
-    }, {
+    },
+    ...(CLOUD_SYNC_AVAILABLE ? [{
         key: 'syncCloudOptions',
         sendMessage: ['open-options-page', {
             section: 'backup/sync',
@@ -190,7 +196,8 @@ export const POPUP_SETTINGS_MENU_ITEMS = Object.freeze([
         closePopup: true,
     }, {
         key: 'hr',
-    }, {
+    }] : []),
+    {
         key: 'aboutAddon',
         sendMessage: ['open-options-page', {
             section: 'about',

@@ -1149,7 +1149,7 @@ async function onBackgroundMessage(message, sender) {
 
                 break;
             case 'start-cloud-sync':
-                if (options.syncEnable) {
+                if (Constants.CLOUD_SYNC_AVAILABLE && options.syncEnable) {
                     const syncResult = await cloudSync({});
 
                     result.ok = syncResult.ok;
@@ -1248,7 +1248,7 @@ async function resetLocalBackupAlarm() {
 async function resetSyncAlarm(useCurrentTimeAsLastRun = false) {
     await resetAlarm(
         Cloud.ALARM_NAME,
-        options.syncEnable,
+        Constants.CLOUD_SYNC_AVAILABLE && options.syncEnable,
         options.syncIntervalKey,
         options.syncIntervalValue,
         useCurrentTimeAsLastRun ? undefined : storage.autoSyncLastTimeStamp
@@ -1583,6 +1583,10 @@ async function cloudSync({
         trust = null,
         revision = null,
     }) {
+    if (!Constants.CLOUD_SYNC_AVAILABLE) {
+        return {ok: false, error: Lang('syncIsDisabled')};
+    }
+
     const log = logger.start(cloudSync, {trust, trigger, revision: revision?.slice(0, 7) ?? null});
 
     let shouldResetSyncAlarm = false;

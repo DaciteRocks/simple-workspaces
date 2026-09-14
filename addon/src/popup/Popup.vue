@@ -61,6 +61,7 @@ export default {
             SECTION_GROUP_TABS,
 
             POPUP_SETTINGS_MENU_ITEMS: Constants.POPUP_SETTINGS_MENU_ITEMS,
+            CLOUD_SYNC_AVAILABLE: Constants.CLOUD_SYNC_AVAILABLE,
             section: SECTION_DEFAULT,
 
             someGroupAreLoading: false,
@@ -1142,11 +1143,11 @@ export default {
             <span v-text="lang('manageGroupsTitle')"></span>
         </div>
         <div
-            v-if="options.syncEnable"
+            v-if="CLOUD_SYNC_AVAILABLE && options.syncEnable"
             tabindex="0"
             class="sync"
-            @click="syncCloudWithConsent()"
-            @keydown.enter="syncCloudWithConsent()"
+            @click="syncCloud()"
+            @keydown.enter="syncCloud()"
             :title="syncTitle"
             >
             <div class="circle-progress" :class="{

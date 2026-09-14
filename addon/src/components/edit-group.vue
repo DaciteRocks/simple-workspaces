@@ -38,6 +38,7 @@ export default {
     },
     data() {
         this.PAGES = Constants.PAGES;
+        this.CLOUD_SYNC_AVAILABLE = Constants.CLOUD_SYNC_AVAILABLE;
         this.DEFAULT_CONTAINER = Containers.DEFAULT;
         this.TEMPORARY_CONTAINER = Containers.TEMPORARY;
         this.GROUP_ICON_VIEW_TYPES = Constants.GROUP_ICON_VIEW_TYPES;
@@ -411,7 +412,7 @@ export default {
             <input type="checkbox" v-model="group.prependTitleToWindow" />
             <span v-text="lang('prependTitleToWindow')"></span>
         </label>
-        <label class="checkbox">
+        <label v-if="CLOUD_SYNC_AVAILABLE" class="checkbox">
             <input type="checkbox" v-model="group.uploadToCloud" />
             <span class="icon-text">
                 <span v-text="lang('uploadToCloud')"></span>
