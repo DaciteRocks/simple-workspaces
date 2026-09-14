@@ -1,14 +1,14 @@
 
-# <img width="48" src="addon/src/icons/icon.svg" alt="main-icon"> Simple Tab Groups
+# <img width="48" src="addon/src/icons/icon.svg" alt="main-icon"> Simple Workspaces
 
 <https://addons.mozilla.org/firefox/addon/simple-tab-groups/>
 
 [![Mozilla Add-on](https://img.shields.io/amo/v/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/) [![downloads](https://img.shields.io/amo/dw/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/statistics/?last=365) [![users](https://img.shields.io/amo/users/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/statistics/usage/?last=365) [![rating](https://img.shields.io/amo/rating/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/reviews/)
 
-> **This is the Vivaldi-parity fork** of Simple Tab Groups, not the upstream add-on. It adds a
-> Vivaldi-style *single-active* rule for Firefox native tab groups (open one group and the previously
+> **Simple Workspaces is a fork of Simple Tab Groups**, not the upstream add-on. The links and badges
+> directly above point at upstream. It adds a Vivaldi-style *single-active* rule for Firefox native tab groups (open one group and the previously
 > open one collapses) on top of upstream's native-group persistence, and ships as a separately signed
-> add-on (`simple-tab-groups-vivaldi@dacite.dev`). Design, status and phases:
+> add-on (`simple-workspaces@dacite.dev`). Design, status and phases:
 > [`docs/VIVALDI-PARITY-FORK.md`](docs/VIVALDI-PARITY-FORK.md). Companion tab-bar stylesheet:
 > [`chrome/`](chrome/README.md). Upstream: <https://github.com/Drive4ik/simple-tab-groups>.
 >
@@ -76,7 +76,7 @@ Allow import groups from addons "Panorama View" and "Sync Tab Groups".
 
 You have to copy and paste into Gesturefy addon
 
-`Add-on ID` : `simple-tab-groups@drive4ik` (upstream) or `simple-tab-groups-vivaldi@dacite.dev` (this fork)
+`Add-on ID` : `simple-tab-groups@drive4ik` (upstream) or `simple-workspaces@dacite.dev` (this fork)
 
 `Parse message` -> `On`
 

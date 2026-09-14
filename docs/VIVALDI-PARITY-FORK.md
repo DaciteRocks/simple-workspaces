@@ -68,6 +68,7 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | 1 | §4.4 single-active: `js/groups-native-exclusive.js`; option `singleExpandedNativeGroup` (default **on**) with Options UI + en locale | done 2026-09-14 (see 0.4) |
 | 2 | Fork identity: manifest id/name/version, README section for building/loading/signing, `chrome/userChrome.css` companion committed with install notes | done 2026-09-14 (see 0.5) |
 | 3 | Edge cases (§5) audit against upstream behavior + manual test checklist for the user (switch, restart, single-active, header drag, pinned) | done 2026-09-14 (see 0.6); manual tests not yet run |
+| 4 | Rename to **Simple Workspaces**: display name, add-on id `simple-workspaces@dacite.dev`, short name, homepage, GitHub repo `DaciteRocks/simple-workspaces` | done 2026-09-14 (see 0.7) |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
 
@@ -112,7 +113,7 @@ Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-imp
 - **Companion CSS:** `chrome/userChrome.css` (the v6 file from §8) with `chrome/README.md` install
   notes. The profile path in §8 is machine-specific; the README describes the generic path.
 - **Not done here:** the actual AMO submission (needs the user's developer account).
-- **GitHub fork:** <https://github.com/DaciteRocks/simple-tab-groups>, remote `origin`, branch `vivaldi-parity`.
+- **GitHub fork:** <https://github.com/DaciteRocks/simple-workspaces> (renamed from `simple-tab-groups` in phase 4), remote `origin`, branch `vivaldi-parity`.
 - **Review (phase-review + code-review, merged):** 0 kept, 4 noted and applied. Both reviewers found the
   toolbar/sidebar titles still reading "Simple Tab Groups" (fixed: en `extensionName` renamed, which
   also gives the fork its own bookmarks root folder). Only code-review found the migration steps never
@@ -172,6 +173,20 @@ rebuilt group won over the one holding the active tab; fixed in `groups-native-e
 `userKeepId`, which gives no keep id to arrivals while an addon operation is running. Noted (both): the
 ordering row named `Tabs.moveNative`, which only runs for cross-window tabs. Dropped as pedantic: test 12
 log wording, "lifetime of one window" phrasing, the intro vs split-view wording, a §16/§17 citation.
+
+### 0.7 Phase 4 — rename to Simple Workspaces
+
+- **Display name:** en `extensionName` is `Simple Workspaces`; every other locale falls back to it, so the
+  toolbar button, sidebar, notifications, Backup tab and bookmarks root folder all use it. The name has no
+  Mozilla or Vivaldi trademark in it, as the AMO linter requires, and no AMO listing used it on 2026-09-14.
+- **Add-on id:** `simple-workspaces@dacite.dev`, replacing the phase 2 id before anything was signed.
+  The id is permanent after the first AMO signing. Zip names follow it.
+- **Manifest:** `short_name` `Workspaces`, `homepage_url` points at the fork. `author` stays upstream's,
+  since the code is theirs under MPL-2.0.
+- **GitHub:** repo renamed to `DaciteRocks/simple-workspaces`; GitHub redirects the old URL. The local
+  folder keeps its `simple-tab-groups` name.
+- **Unchanged on purpose:** translator `description` notes that mention Simple Tab Groups, the upstream
+  AMO badges in README.md, which the banner now labels as upstream, and this document's file name.
 
 ---
 

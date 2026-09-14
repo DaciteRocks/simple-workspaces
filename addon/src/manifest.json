@@ -3,17 +3,17 @@
 
     "browser_specific_settings": {
         "gecko": {
-            "id": "simple-tab-groups-vivaldi@dacite.dev",
+            "id": "simple-workspaces@dacite.dev",
             "strict_min_version": "140.0"
         }
     },
 
     "name": "__MSG_extensionName__",
-    "short_name": "STG-V",
+    "short_name": "Workspaces",
     "description": "__MSG_extensionDescription__",
     "version": "6.0.0.1",
     "author": "Vitalii Bavykin",
-    "homepage_url": "https://github.com/drive4ik/simple-tab-groups",
+    "homepage_url": "https://github.com/DaciteRocks/simple-workspaces",
 
     "incognito": "not_allowed",
 
