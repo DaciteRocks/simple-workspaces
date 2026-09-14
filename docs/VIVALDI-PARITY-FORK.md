@@ -70,6 +70,7 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | 3 | Edge cases (§5) audit against upstream behavior + manual test checklist for the user (switch, restart, single-active, header drag, pinned) | done 2026-09-14 (see 0.6); manual tests not yet run |
 | 4 | Rename to **Simple Workspaces**: display name, add-on id `simple-workspaces@dacite.dev`, short name, homepage, GitHub repo `DaciteRocks/simple-workspaces` | done 2026-09-14 (see 0.7) |
 | 5 | Publishing prep for a **listed** AMO release: new icon, Gist sync disabled and no data collection, privacy policy, `build-for-amo` script and reviewer README, listing draft, repo default branch | done 2026-09-14 (see 0.8); not yet exercised in a live Firefox |
+| 6 | One-command local testing: `npm run test:firefox` (build, watch, Firefox with a separate test profile, userChrome.css, checklist page), `:smoke`, `:reset` | done 2026-09-14 (see 0.9); smoke test passes headless |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
 
@@ -233,6 +234,30 @@ distinguished, so the add-on also gets its own icon.
 - **GitHub:** default branch set to `vivaldi-parity`.
 - **Not verified:** nothing in this phase was exercised in a running Firefox; AMO's default build
   environment (Ubuntu, Node 24) was not tried. Screenshots still have to be taken.
+
+### 0.9 Phase 6 — one-command local testing
+
+Goal from the user: testing locally should be as easy as possible, with everything automated.
+
+- **Tool:** Mozilla's `web-ext` 10.6.0 as a dev dependency. Checked before adding: maintained by Mozilla's
+  add-ons automation account, MPL-2.0, monthly releases (latest 2026-08-04), about 164k weekly downloads,
+  not deprecated.
+- **`npm run test:firefox`** (`addon/scripts/test-firefox.js`): builds once, starts `webpack --watch`, then
+  `web-ext run` against `addon/dist` with a persistent test profile in `addon/.firefox-test-profile`
+  (gitignored). It copies `chrome/userChrome.css` into the profile and sets prefs for the stylesheet,
+  session restore, keeping extension storage when the temporary add-on is removed, and a quiet first run.
+  On a new profile it opens `addon/scripts/test-checklist.html`. web-ext reloads the add-on after each
+  rebuild. Closing Firefox or Ctrl+C stops the watcher and only the Firefox processes started with the test
+  profile; the user's own Firefox is never touched.
+- **Checklist page:** setup steps, the 12 tests adapted from 0.6 (test 11 and the new test 12 reflect
+  disabled sync), pass/fail/skip plus notes saved in the profile, and a "Copy results" button that produces
+  a plain-text report to paste back into a session.
+- **`npm run test:firefox:smoke`:** headless run with its own throwaway profile; passes once web-ext reports
+  the add-on installed, then cleans up. Verified passing twice on Windows 11 with Firefox 155.0.1 while the
+  user's Firefox stayed running.
+- **`npm run test:firefox:reset`:** deletes the test profile.
+- **Limit:** the restart test in this setup reinstalls the temporary add-on after Firefox restores tabs,
+  which is close to but not the same as a restart with an installed add-on.
 
 ---
 

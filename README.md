@@ -21,6 +21,20 @@
 > What does not carry over: STG plugins (group notes, etc.) and the Windows backup host (STGHost)
 > only accept the upstream id. In the fork, pick a backup location other than the host.
 >
+> **Test it locally, one command:**
+>
+> ```bash
+> cd addon
+> npm install
+> npm run test:firefox
+> ```
+>
+> This builds the add-on, opens Firefox with it installed in a separate test profile (your normal tabs are
+> untouched), sets up `chrome/userChrome.css`, opens a clickable test checklist, and reloads the add-on
+> every time the code changes. Close that Firefox window to stop. Run it again later and the workspaces
+> from last time are restored. `npm run test:firefox:reset` starts over with a fresh profile, and
+> `npm run test:firefox:smoke` is a headless check that the add-on installs.
+>
 > Build: `cd addon && npm install && npm run build`, then `about:debugging` → *Load Temporary
 > Add-on* → `addon/dist/manifest.json`. `npm run dev` rebuilds on change. `npm run build-zip` produces
 > the zips in `addon/dist-zip/` for signing as an **unlisted** add-on on

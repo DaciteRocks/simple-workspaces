@@ -9,7 +9,10 @@
         "build-for-amo": "webpack --mode production",
         "watch": "npm run build -- --watch",
         "dev": "npm run watch",
-        "build-zip": "node scripts/build-zip.js"
+        "build-zip": "node scripts/build-zip.js",
+        "test:firefox": "node scripts/test-firefox.js",
+        "test:firefox:smoke": "node scripts/test-firefox.js --smoke",
+        "test:firefox:reset": "node scripts/test-firefox.js --reset"
     },
     "dependencies": {
         "vue": "^2.7.16",
@@ -22,6 +25,7 @@
         "mini-css-extract-plugin": "^2.9.4",
         "vue-loader": "^15.11.1",
         "vue-template-compiler": "^2.7.16",
+        "web-ext": "^10.6.0",
         "webpack": "^5.104.1",
         "webpack-cli": "^6.0.1",
         "zip-a-folder": "^4.0.4"

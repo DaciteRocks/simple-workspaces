@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simple Workspaces test checklist</title>
+<style>
+    :root {
+        color-scheme: light dark;
+        --bg: #f9f9fb;
+        --card: #ffffff;
+        --text: #15141a;
+        --muted: #5b5b66;
+        --border: #d7d7db;
+        --accent: #0061e0;
+        --pass: #017a40;
+        --fail: #c50042;
+        --skip: #8a6d00;
+    }
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #1c1b22;
+            --card: #2b2a33;
+            --text: #fbfbfe;
+            --muted: #bfbfc9;
+            --border: #52525e;
+            --accent: #00ddff;
+            --pass: #54ffbd;
+            --fail: #ff9aa2;
+            --skip: #ffd567;
+        }
+    }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        padding-block: 24px 64px;
+        padding-inline: 16px;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.5 system-ui, sans-serif;
+    }
+    main { max-width: 860px; margin: 0 auto; }
+    h1 { font-size: 1.6rem; margin: 0 0 4px; }
+    h2 { font-size: 1.1rem; margin: 28px 0 8px; }
+    p { margin: 6px 0; }
+    .muted { color: var(--muted); }
+    .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin: 10px 0;
+    }
+    .test-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+    .num { font-weight: 700; color: var(--muted); min-width: 2ch; }
+    .title { font-weight: 600; flex: 1 1 320px; }
+    .expected { margin-top: 6px; }
+    .expected b { color: var(--muted); font-weight: 600; }
+    .result { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .result label {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 2px 12px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .result input { position: absolute; opacity: 0; pointer-events: none; }
+    .result label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .result label:has(input[value="pass"]:checked) { border-color: var(--pass); color: var(--pass); font-weight: 600; }
+    .result label:has(input[value="fail"]:checked) { border-color: var(--fail); color: var(--fail); font-weight: 600; }
+    .result label:has(input[value="skip"]:checked) { border-color: var(--skip); color: var(--skip); font-weight: 600; }
+    textarea {
+        width: 100%;
+        min-height: 2.6em;
+        margin-top: 8px;
+        padding: 6px 8px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        resize: vertical;
+    }
+    ol, ul { padding-inline-start: 22px; margin: 6px 0; }
+    code { font-size: 0.92em; }
+    .bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 14px; }
+    button {
+        font: inherit;
+        padding: 6px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: var(--bg);
+        cursor: pointer;
+    }
+    button.secondary { background: transparent; color: var(--accent); }
+    #summary { font-weight: 600; }
+    #copied { color: var(--pass); }
+    #export { display: block; margin-top: 10px; min-height: 8em; }
+</style>
+</head>
+<body>
+<main>
+    <h1>Simple Workspaces test checklist</h1>
+    <p class="muted">This Firefox window uses a separate test profile, so your normal tabs are untouched. The add-on is
+    already installed and reloads by itself every time the code changes. Your answers here are saved in this profile.</p>
+
+    <h2>Before you start</h2>
+    <div class="card">
+        <ol>
+            <li>Click the Simple Workspaces toolbar button and create two workspaces, named <b>W1</b> and <b>W2</b>.</li>
+            <li>In W1, open a few sites using the links below. Then select 3 tabs, right-click, and choose
+                <b>Add Tabs to New Group</b>. Name the group <b>A</b>.</li>
+            <li>Select 2 other tabs the same way and make group <b>B</b>.</li>
+            <li>Switch to W2, open 2 tabs and make group <b>C</b>.</li>
+        </ol>
+        <p>Sample sites:
+            <a href="https://example.com/" target="_blank">example.com</a>,
+            <a href="https://www.mozilla.org/" target="_blank">mozilla.org</a>,
+            <a href="https://developer.mozilla.org/" target="_blank">MDN</a>,
+            <a href="https://en.wikipedia.org/" target="_blank">Wikipedia</a>,
+            <a href="https://github.com/DaciteRocks/simple-workspaces" target="_blank">the repo</a>.
+        </p>
+    </div>
+
+    <h2>Tests</h2>
+    <div id="tests"></div>
+
+    <h2>Results</h2>
+    <div class="card">
+        <p id="summary"></p>
+        <div class="bar">
+            <button id="copy" type="button">Copy results</button>
+            <button id="reset" type="button" class="secondary">Clear all answers</button>
+            <span id="copied" hidden>Copied. Paste it into Claude.</span>
+        </div>
+        <textarea id="export" readonly aria-label="Results to copy"></textarea>
+    </div>
+</main>
+
+<script>
+const TESTS = [
+    {
+        title: 'Open A, then open B',
+        expected: 'A collapses by itself. Only B is open, and with the stylesheet only B is on the bottom row.',
+    }, {
+        title: 'With a tab of B selected, open A',
+        expected: 'B collapses. The selected tab from B stays visible next to B\'s collapsed header. A is open.',
+    }, {
+        title: 'While A is open, select two ungrouped tabs and choose "Add Tabs to New Group"',
+        expected: 'The new group opens and A collapses.',
+    }, {
+        title: 'While A is open, rename B by typing several characters',
+        expected: 'A stays open. Nothing collapses while you type.',
+    }, {
+        title: 'Switch W1, then W2, then back to W1 using the toolbar popup',
+        expected: 'In W2 you see no A or B headers. Back in W1, A and B come back with their names and colors, and at most one is open.',
+    }, {
+        title: 'Restart test: close this Firefox window, then run the command again',
+        expected: 'Your workspaces and groups are still there, grouped, with names and colors, and at most one open. Note: this setup reinstalls the add-on after Firefox restores the tabs, so it is close to, but not the same as, a real restart with an installed add-on.',
+    }, {
+        title: 'Put two tabs of A side by side in split view, then switch to W2',
+        expected: 'Known risk: check whether an empty placeholder tab appears in W2. Mark fail if it does, and describe it in the note.',
+    }, {
+        title: 'Open a container tab inside A, switch to W2, then back to W1',
+        expected: 'The container tab is back inside A.',
+    }, {
+        title: 'With B open and A collapsed, drag B\'s header to another spot',
+        expected: 'B is still open after you drop it, and A stays collapsed. Also try dragging a collapsed header and note what happens.',
+    }, {
+        title: 'Drag a single tab out of A into a new window',
+        expected: 'A keeps its other tabs. The new window has one ungrouped tab. Nothing collapses anywhere.',
+    }, {
+        title: 'Settings: untick "Keep only one native tab group expanded at a time", then open A and B',
+        expected: 'Both stay open. When you tick it again, one collapses right away, and the one with the selected tab stays open.',
+    }, {
+        title: 'Look around Settings and the toolbar popup',
+        expected: 'The new icon shows in the toolbar. There is no cloud sync section, sync button or sync menu item. No error notifications appear.',
+    },
+];
+
+const STORAGE_KEY = 'simple-workspaces-checklist-v1';
+
+function load() {
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? {};
+    } catch {
+        return {};
+    }
+}
+
+function save(state) {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch {
+        // storage unavailable: answers only last for this page view
+    }
+}
+
+let state = load();
+const root = document.getElementById('tests');
+
+TESTS.forEach((test, i) => {
+    const id = String(i + 1);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+        <div class="test-head">
+            <span class="num">${id}</span>
+            <span class="title"></span>
+        </div>
+        <p class="expected"><b>Expected:</b> <span></span></p>
+        <div class="result" role="radiogroup" aria-label="Result for test ${id}">
+            ${['pass', 'fail', 'skip'].map(value => `
+                <label><input type="radio" name="t${id}" value="${value}">${value[0].toUpperCase() + value.slice(1)}</label>
+            `).join('')}
+        </div>
+        <textarea placeholder="Notes: what you saw, especially if it failed" aria-label="Notes for test ${id}"></textarea>
+    `;
+    card.querySelector('.title').textContent = test.title;
+    card.querySelector('.expected span').textContent = test.expected;
+
+    const saved = state[id] ?? {};
+    if (saved.result) {
+        card.querySelector(`input[value="${saved.result}"]`).checked = true;
+    }
+    const notes = card.querySelector('textarea');
+    notes.value = saved.notes ?? '';
+
+    card.addEventListener('change', event => {
+        if (event.target.matches('input[type="radio"]')) {
+            state[id] = {...state[id], result: event.target.value};
+            save(state);
+            render();
+        }
+    });
+    notes.addEventListener('input', () => {
+        state[id] = {...state[id], notes: notes.value};
+        save(state);
+        render();
+    });
+
+    root.append(card);
+});
+
+function render() {
+    const counts = {pass: 0, fail: 0, skip: 0};
+    const lines = ['Simple Workspaces local test results', ''];
+
+    TESTS.forEach((test, i) => {
+        const id = String(i + 1);
+        const {result, notes} = state[id] ?? {};
+        if (result) {
+            counts[result]++;
+        }
+        lines.push(`${id}. ${(result ?? 'not run').toUpperCase()}: ${test.title}`);
+        if (notes?.trim()) {
+            lines.push(`   Note: ${notes.trim().replace(/\n+/g, ' ')}`);
+        }
+    });
+
+    const done = counts.pass + counts.fail + counts.skip;
+    document.getElementById('summary').textContent =
+        `${done} of ${TESTS.length} done: ${counts.pass} passed, ${counts.fail} failed, ${counts.skip} skipped.`;
+    document.getElementById('export').value = lines.join('\n');
+}
+
+document.getElementById('copy').addEventListener('click', async () => {
+    const text = document.getElementById('export').value;
+    try {
+        await navigator.clipboard.writeText(text);
+    } catch {
+        const area = document.getElementById('export');
+        area.select();
+        document.execCommand('copy');
+    }
+    const copied = document.getElementById('copied');
+    copied.hidden = false;
+    setTimeout(() => copied.hidden = true, 3000);
+});
+
+document.getElementById('reset').addEventListener('click', () => {
+    if (confirm('Clear all answers and notes?')) {
+        state = {};
+        save(state);
+        location.reload();
+    }
+});
+
+render();
+</script>
+</body>
+</html>
