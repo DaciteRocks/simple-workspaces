@@ -1145,8 +1145,8 @@ export default {
             v-if="options.syncEnable"
             tabindex="0"
             class="sync"
-            @click="syncCloud()"
-            @keydown.enter="syncCloud()"
+            @click="syncCloudWithConsent()"
+            @keydown.enter="syncCloudWithConsent()"
             :title="syncTitle"
             >
             <div class="circle-progress" :class="{

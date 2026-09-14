@@ -11,6 +11,7 @@ import * as Utils from '/js/utils.js';
 import * as SyncStorage from '/js/sync/sync-storage.js';
 import * as Cloud from '/js/sync/cloud/cloud.js';
 import GithubGist from '/js/sync/cloud/githubgist.js';
+import * as Permissions from '/js/permissions.js';
 
 import syncCloudMixin from '/js/mixins/sync-cloud.mixin.js';
 
@@ -153,6 +154,11 @@ export default {
                 return;
             }
 
+            // opening settings must not reach GitHub before the user consented
+            if (!await Permissions.hasDataCollection(Permissions.CLOUD_SYNC_DATA_COLLECTION)) {
+                return;
+            }
+
             try {
                 area.loadingGist = true;
 
@@ -208,6 +214,12 @@ export default {
 
         // MAIN
         async save(area) {
+            // checking the token sends it to GitHub - consent first, while still inside the click
+            if (area.options.githubGistToken && !await Permissions.requestDataCollection(Permissions.CLOUD_SYNC_DATA_COLLECTION)) {
+                this.syncCloudErrorMessage = Lang('syncNeedsDataConsent');
+                return;
+            }
+
             try {
                 area.loadingOptions = true;
 
@@ -225,6 +237,11 @@ export default {
         },
 
         async startCloudSync(trust) {
+            if (!await Permissions.requestDataCollection(Permissions.CLOUD_SYNC_DATA_COLLECTION)) {
+                this.syncCloudErrorMessage = Lang('syncNeedsDataConsent');
+                return;
+            }
+
             if (this.isCredentialsChanged) {
                 this.syncCloudErrorMessage = '';
 
@@ -239,7 +256,7 @@ export default {
         },
 
         async restoreBackup({version}) {
-            await this.syncCloud(Cloud.TRUST_CLOUD, version);
+            await this.syncCloudWithConsent(Cloud.TRUST_CLOUD, version);
         },
     },
 };

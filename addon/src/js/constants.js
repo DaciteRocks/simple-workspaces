@@ -29,15 +29,6 @@ export const DEFAULT_COOKIE_STORE_ID = {
 export const TEMPORARY_CONTAINER = 'temporary-container';
 export const TEMPORARY_CONTAINER_ICON = 'chill';
 
-export const MOZILLA_API = Object.freeze({
-    get BASE_URL() {
-        return 'https://addons.mozilla.org/api/v5/';
-    },
-    get ADDON() {
-        return this.BASE_URL + 'addons/addon/{id}/';
-    },
-});
-
 export const HOST = Object.freeze({
     NAME: 'simple_tab_groups_host',
     VERSION: '1.0',

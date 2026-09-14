@@ -143,20 +143,9 @@ function getIgnoredConflicted() {
     return storage.ignoredConflicted ?? [];
 }
 
-export async function loadIconUrl(id, defaultUrl = null, size = 32) {
-    const apiUrl = Utils.formatUrl(Constants.MOZILLA_API.ADDON, {id});
-
-    try {
-        const response = await fetch(apiUrl);
-
-        if (response.ok) {
-            const data = await response.json();
-            return data.icons[size] || data.icon_url || defaultUrl;
-        }
-    } catch (e) {
-        logger.logError(["can't load icon for", id], e);
-    }
-
+// no network request: fetching the icon from the addons.mozilla.org API would send the ids of the user's
+// installed add-ons to Mozilla (docs/PRIVACY.md), so the generic icon is shown instead
+export async function loadIconUrl(id, defaultUrl = null) {
     return defaultUrl;
 }
 

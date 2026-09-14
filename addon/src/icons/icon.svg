@@ -1,12 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" style="color-scheme: light dark;" fill="context-fill light-dark(#5b5b66,#fbfbfe)">
-    <rect height="32" width="32" />
-    <rect height="32" width="32" x="48" />
-    <rect height="32" width="32" x="96" y="48" />
-    <rect height="32" width="32" y="48" />
-    <rect height="32" width="32" x="48" y="48" />
-    <rect height="32" width="32" x="96" />
-    <rect height="32" width="32" y="96" />
-    <rect height="32" width="32" x="48" y="96" />
-    <rect height="32" width="32" x="96" y="96" />
-    <polygon points="16,128 128,16 128,128" fill="transparent" />
+    <!-- Simple Workspaces: a workspace behind, and the active workspace in front with a two-level tab bar -->
+    <defs>
+        <clipPath id="behind-front">
+            <path clip-rule="evenodd" d="M0 0H128V128H0Z M-6 30H102V134H-6Z" />
+        </clipPath>
+    </defs>
+    <path clip-path="url(#behind-front)" fill-rule="evenodd"
+        d="M50 4H110A14 14 0 0 1 124 18V70A14 14 0 0 1 110 84H50A14 14 0 0 1 36 70V18A14 14 0 0 1 50 4Z
+           M52 17H108A3 3 0 0 1 111 20V68A3 3 0 0 1 108 71H52A3 3 0 0 1 49 68V20A3 3 0 0 1 52 17Z" />
+    <path fill-rule="evenodd"
+        d="M18 40H78A14 14 0 0 1 92 54V110A14 14 0 0 1 78 124H18A14 14 0 0 1 4 110V54A14 14 0 0 1 18 40Z
+           M17 53H41V68H17Z
+           M47 53H79V68H47Z
+           M17 76H79V91H17Z" />
 </svg>

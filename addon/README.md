@@ -1,48 +1,52 @@
 
-# Instructions for Mozilla reviewers
+# Instructions for Mozilla reviewers — Simple Workspaces
 
-I have the source code in the vue and js files. With the command `npm run build` you create a build on pure js which is located in the dist folder.
-The `npm run build-zip` command will create 2 zip archives in the `dist-zip` folder.
-The file `simple-tab-groups@drive4ik-v5.0-dev.zip` has the source code - I upload it with each release.
-The file `simple-tab-groups@drive4ik-v5.0-prod.zip` has compiled code from the command `npm run build`, which actually gets into the resulting XPI file.
-All these commands and their execution are described in the `package.json` file.
-How the build is going and with what settings you can also see in the file `webpack.config.mjs`
+Simple Workspaces is a fork of Simple Tab Groups (<https://github.com/Drive4ik/simple-tab-groups>,
+MPL-2.0). Full source: <https://github.com/DaciteRocks/simple-workspaces>.
 
-I use Windows 11 x64
+The add-on source is the `.vue` and `.js` files in `src`. webpack bundles only the four UI entry points
+(`popup`, `options`, `manage`, `web/content-script`); every other file in `src` is copied to `dist`
+unchanged. Minification is off (`optimization.minimize: false` in `webpack.config.js`).
+
+## Build environment used for the submitted package
+
+- Windows 11 x64
+- Node.js v20.19.6, npm 10.8.2
+- No other tools. No network access is needed after `npm ci`.
+
+AMO's default environment (Ubuntu 24.04, Node 24, npm 11) has not been tested with this package. If its
+output differs, please build with Node 20 LTS: <https://nodejs.org/en/download>.
+
+## Build
+
+Run from the folder that contains this README and `package.json`:
 
 ```bash
-$ node -v
-v24.16.0
-
-$ npm -v
-11.13.0
+npm ci
+npm run build-for-amo
 ```
 
-Build code:
+The extension is written to `dist/`. Its contents must match the uploaded package file for file.
+
+## How the uploaded files were made
 
 ```bash
-npm install
-npm run build
-```
-
-This code will be located in the `dist` folder.
-
-Create ZIP archives:
-
-```bash
-npm install
+npm ci
 npm run build-zip
 ```
 
+This creates `dist-zip/simple-workspaces@dacite.dev-v<version>-prod.zip` (the package) and
+`dist-zip/simple-workspaces@dacite.dev-v<version>-dev.zip` (this source archive).
+
+## Data collection
+
+`browser_specific_settings.gecko.data_collection_permissions` declares `required: ["none"]` and optional
+`authenticationInfo`, `browsingActivity` and `websiteContent`. They cover the opt-in GitHub Gist sync only.
+Consent is requested with `permissions.request({data_collection})` from the click that enables or starts
+sync (`src/js/permissions.js`), and `src/js/sync/cloud/cloud.js` refuses to sync without it. The add-on
+makes no other network requests.
+
 ## Third-party libraries
 
-This addon uses the third-party javascript library - Vue.
-The Vue framework does not have an official CDN. So I took the file "vue.runtime.esm.js" from the CDN which is listed on their official website:
-<https://v2.vuejs.org/v2/guide/installation.html#CDN>
-
-The file `src/js/vue.runtime.esm.js` has version `2.7.16`, and downloaded from:
-<https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.runtime.esm.js>
-
-This is the stable production version.
-
-Best regards.
+- Vue 2.7.16 runtime, unmodified: `src/js/vue.runtime.esm.js`, downloaded from
+  <https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.runtime.esm.js>.

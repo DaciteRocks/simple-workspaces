@@ -1523,6 +1523,10 @@
         "message": "Firefox sync isn't supported",
         "description": "Firefox sync isn't supported"
     },
+    "syncNeedsDataConsent": {
+        "message": "Cloud sync needs your permission to send your tabs and GitHub token to GitHub. Click Start sync in Settings and allow it.",
+        "description": "Cloud sync needs your permission to send your tabs and GitHub token to GitHub. Click Start sync in Settings and allow it."
+    },
     "or": {
         "message": "or",
         "description": "one or the other"

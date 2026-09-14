@@ -257,6 +257,12 @@ export default {
         },
     },
     methods: {
+        // turning sync on asks for data consent right in the click; declined leaves sync off
+        async onSyncEnableChange(event) {
+            if (event.target.checked && !await Permissions.requestDataCollection(Permissions.CLOUD_SYNC_DATA_COLLECTION)) {
+                this.options.syncEnable = false;
+            }
+        },
         addCustomWatchers() {
             this.optionsWatch('autoBackupLocation', value => {
                 if (value === this.AUTO_BACKUP_LOCATIONS.HOST) {
@@ -1314,7 +1320,7 @@ export default {
         <div id="sync-block" class="field">
             <div class="field">
                 <label class="checkbox">
-                    <input v-model="options.syncEnable" type="checkbox" />
+                    <input v-model="options.syncEnable" type="checkbox" @change="onSyncEnableChange" />
                     <span v-text="lang('syncEnableTitle')"></span>
                 </label>
             </div>

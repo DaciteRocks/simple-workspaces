@@ -6,6 +6,7 @@
     "type": "module",
     "scripts": {
         "build": "webpack --mode production",
+        "build-for-amo": "webpack --mode production",
         "watch": "npm run build -- --watch",
         "dev": "npm run watch",
         "build-zip": "node scripts/build-zip.js"
