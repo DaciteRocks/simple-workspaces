@@ -67,7 +67,7 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | 0 | Recon; spec into repo; branch `vivaldi-parity` | done 2026-09-14 |
 | 1 | §4.4 single-active: `js/groups-native-exclusive.js`; option `singleExpandedNativeGroup` (default **on**) with Options UI + en locale | done 2026-09-14 (see 0.4) |
 | 2 | Fork identity: manifest id/name/version, README section for building/loading/signing, `chrome/userChrome.css` companion committed with install notes | done 2026-09-14 (see 0.5) |
-| 3 | Edge cases (§5) audit against upstream behavior + manual test checklist for the user (switch, restart, single-active, header drag, pinned) | pending |
+| 3 | Edge cases (§5) audit against upstream behavior + manual test checklist for the user (switch, restart, single-active, header drag, pinned) | done 2026-09-14 (see 0.6); manual tests not yet run |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
 
@@ -120,6 +120,50 @@ Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-imp
   warns when both run). Only phase-review found the backup-host id limit and the stale Gesturefy id
   (both documented). Dropped by the verifier: code-review's claim that `6.0.0.1` makes upstream reject
   fork data — `isDataVersionNewer` compares majors only (`compareNumericVersions` returns 4, not 1).
+
+---
+
+
+### 0.6 Phase 3 — §5 edge-case audit and manual test plan
+
+Nothing in this phase changes code: every §5 item is either already handled by upstream's
+native-group layer or is a browser limitation that can only be confirmed by hand. Facts cite
+`docs/TABGROUPS-BEHAVIOR.md` (§n) and the upstream issues the spec names.
+
+| §5 item | State | Where / why |
+| - | - | - |
+| Group-id instability | handled | stable 8-char ids in `group.groupsNative[].id`, live↔stable maps in `groups-native.js`; the exclusive module keys on live ids only for the lifetime of one window and drops them on `onRemoved` |
+| Ordering & contiguity | handled | `Tabs.moveNative` gathers a workspace as one block before `GroupsNative.apply`; `tabs.group` preserves the order we pass (§3, implication 5) |
+| Tab identity across restart | handled | membership is a `sessions.setTabValue` on the tab, which Firefox itself carries across restart (§6); no URL/position heuristic needed |
+| Pinned tabs | handled by the browser | pinning strips native membership itself (§19), unpin does not restore it; `queryWindowTabs` excludes pinned; the exclusive module never touches pinned tabs (groups cannot contain them) |
+| Split view | **unverified, likely still broken** | upstream #1352 (open, no response): hiding a split-view tab leaves an empty placeholder tab. No split-view handling exists in `addon/src`. Test 7 below; fix would be a follow-up phase |
+| Containers (`cookieStoreId`) | handled | membership rides on the tab, independent of container; upstream #1227 (open) describes container groups acting as pinned — a Firefox-side behavior, test 8 |
+| Window scoping | handled | native groups are window-scoped (§16); `apply`/`enforceWindow` take a `windowId`; a group moved to another window keeps its live id and is re-enforced via `onMoved` |
+| Races / feedback loops | handled | `Operations.isBusy()` parks both the mirror and the enforcement until idle; the exclusive module only collapses, so its own `onUpdated` events never re-trigger it |
+| Header-drag flicker (§14) | handled | the drag collapses the group and re-expands it on drop; that re-expand is a real transition and keeps the dragged group, collapsing others — consistent with "the group you touched is the open one" |
+
+#### Manual test plan (Firefox 155, fork loaded as temporary add-on, `chrome/userChrome.css` installed)
+
+Setup: two STG workspaces W1 and W2. In W1 create native groups A (3 tabs) and B (2 tabs) via the
+browser's tab context menu; in W2 create group C (2 tabs).
+
+| # | Action | Expected |
+| - | - | - |
+| 1 | Expand A, then expand B | A collapses on its own; the bottom bar shows only B |
+| 2 | With a tab of B active, expand A | B collapses; B's active tab is still drawn beside B's collapsed header (§5); bottom bar shows A |
+| 3 | Select two ungrouped tabs → "Add tabs to new group" while A is expanded | the new group is expanded and A collapses |
+| 4 | Rename B (type several characters) while A is expanded | A stays expanded; nothing collapses (rename is not an expand) |
+| 5 | Switch W1 → W2 → W1 via the STG popup | no A/B headers visible in W2 (no bleed); back in W1 A and B are rebuilt with their titles/colors and at most one expanded |
+| 6 | Quit Firefox fully, restart, wait for STG to settle | W1's groups come back grouped, titles and colors intact, at most one expanded |
+| 7 | Put two tabs of A in split view, switch to W2 | **known risk (#1352):** check whether an empty placeholder tab appears in W2; record the result in this table |
+| 8 | Create a container tab inside A, switch W1 → W2 → W1 | the container tab is back inside A |
+| 9 | With B expanded and A collapsed, drag B's header to another position | B is still expanded after the drop and A stays collapsed (§14: the drag collapses then re-expands B; that re-expand keeps B). Dragging a *collapsed* header is not covered by §14 — note what happens |
+| 10 | Drag a single tab out of A into a new window | A survives in W1; the new window has one ungrouped tab (§16) and nothing is collapsed anywhere |
+| 11 | Options → untick "Keep only one native tab group expanded" → expand A and B | both stay expanded; re-tick → one collapses immediately |
+| 12 | `about:debugging` → Inspect the fork → console filter `GroupsNativeExclusive` | one `enforceWindow` line per collapse, none during rename |
+
+**Not run yet.** This session cannot drive the Firefox UI, so none of the 12 checks has a result. Record
+pass/fail per row when run; anything that fails becomes its own phase.
 
 ---
 
