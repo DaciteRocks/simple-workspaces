@@ -185,8 +185,15 @@ log wording, "lifetime of one window" phrasing, the intro vs split-view wording,
   since the code is theirs under MPL-2.0.
 - **GitHub:** repo renamed to `DaciteRocks/simple-workspaces`; GitHub redirects the old URL. The local
   folder keeps its `simple-tab-groups` name.
+- **Review (phase-review + code-review, merged):** code-review found nothing. Phase-review found 12 English
+  strings still calling the product "STG" (verifier: NOTE 70), applied: they now use `__MSG_extensionName__`.
+  The DB-error help page's "Install" link now points at the fork instead of upstream's AMO listing.
+  Dropped as untouched by this phase: the About tab's upstream AMO link and the `STG-backups` default
+  backup folder, which is a real folder name and stays.
 - **Unchanged on purpose:** translator `description` notes that mention Simple Tab Groups, the upstream
   AMO badges in README.md, which the banner now labels as upstream, and this document's file name.
+- **Other locales still say STG:** 19 locales use the token 150 times inside inflected grammar, so a
+  blind swap would break sentences. Left for translation; English is complete.
 
 ---
 

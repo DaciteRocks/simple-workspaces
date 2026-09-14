@@ -534,7 +534,7 @@
         }
     },
     "clickHereToReloadAddon": {
-        "message": "Something went wrong, click here to reload STG addon",
+        "message": "Something went wrong, click here to reload __MSG_extensionName__",
         "description": "Something went wrong, click here to reload STG addon"
     },
     "extendedTabSearch": {
@@ -1142,7 +1142,7 @@
         "description": "Database error in Simple Tab Groups"
     },
     "helpPageDbErrorReinstallDescription": {
-        "message": "Unfortunately, an error occurred while reading data from the STG addon from the Firefox database. At the moment, the addon is stopped. To resume the add-on, do the following:",
+        "message": "Unfortunately, an error occurred while reading data from __MSG_extensionName__ from the Firefox database. At the moment, the addon is stopped. To resume the add-on, do the following:",
         "description": "Unfortunately, an error occurred while reading data from the STG addon from the Firefox database. At the moment, the addon is stopped. To resume the add-on, do the following:"
     },
     "helpPageDbErrorReinstallDescription2": {
@@ -1154,7 +1154,7 @@
         "description": "If you see this window again, try reinstalling the addon:"
     },
     "helpPageDbErrorReinstallDescription4": {
-        "message": "Remove STG Addon",
+        "message": "Remove __MSG_extensionName__",
         "description": "Remove STG Addon"
     },
     "helpPageDbErrorReinstallDescription5": {
@@ -1162,11 +1162,11 @@
         "description": "Restart Firefox Browser"
     },
     "helpPageDbErrorReinstallDescription6": {
-        "message": "Install STG Addon",
+        "message": "Install __MSG_extensionName__",
         "description": "Install STG Addon"
     },
     "helpPageDbErrorReinstallDescription7": {
-        "message": "Restore the latest STG addon data backup located in the Firefox downloads folder \"STG-backups\".\nYou can restore backup in addon settings",
+        "message": "Restore the latest __MSG_extensionName__ data backup located in the Firefox downloads folder \"STG-backups\".\nYou can restore backup in addon settings",
         "description": "Restore the latest STG addon data backup located in the Firefox downloads folder \"STG-backups\".\nYou can restore backup in addon settings"
     },
     "helpPageDbErrorReinstallOpenFFDownloadsFolder": {
@@ -1270,7 +1270,7 @@
         "description": "Disabled text"
     },
     "helpPageExtensionsThatConflictWithStgTitle": {
-        "message": "Extensions that conflict with STG",
+        "message": "Extensions that conflict with __MSG_extensionName__",
         "description": "Extensions that conflict with STG"
     },
     "helpPageExtensionsThatConflictWithStgDesc1": {
@@ -1294,7 +1294,7 @@
         "description": "Extension is ignored"
     },
     "ignoreConflictedExtConfirm": {
-        "message": "This addon will interfere with the STG, which may cause you to lose tabs.\nStill ignore it?",
+        "message": "This addon will interfere with __MSG_extensionName__, which may cause you to lose tabs.\nStill ignore it?",
         "description": "This addon will interfere with the STG, which may cause you to lose tabs.\nStill ignore it?"
     },
     "colorScheme": {
@@ -1334,7 +1334,7 @@
         "description": "Copy URL"
     },
     "helpPageStgDebugTitle": {
-        "message": "STG debug page",
+        "message": "__MSG_extensionName__ debug page",
         "description": "STG debug page"
     },
     "helpPageStgDebugAutoDebugMainTitle": {
@@ -1528,7 +1528,7 @@
         "description": "one or the other"
     },
     "helpPageHowToGithubGistTitle": {
-        "message": "Configuring STG synchronization via GitHub Gist",
+        "message": "Configuring __MSG_extensionName__ synchronization via GitHub Gist",
         "description": "Configuring STG synchronization via GitHub Gist"
     },
     "helpPageHowToGithubGistWhatIsQ": {
@@ -1536,7 +1536,7 @@
         "description": "What is this for?"
     },
     "helpPageHowToGithubGistWhatIsDesc": {
-        "message": "This is to synchronize your tabs and __MSG_extensionName__ settings between two or more computers.\nYour data will be stored in a GitHub Gist file. This file will be private. Apart from you, no one will have access to it unless you yourself provide a GitHub Gist link to this data to another person. STG will only send this data to your GitHub account.",
+        "message": "This is to synchronize your tabs and __MSG_extensionName__ settings between two or more computers.\nYour data will be stored in a GitHub Gist file. This file will be private. Apart from you, no one will have access to it unless you yourself provide a GitHub Gist link to this data to another person. __MSG_extensionName__ will only send this data to your GitHub account.",
         "description": "What is description"
     },
     "helpPageHowToGithubGistHowSetupQ": {
@@ -1548,7 +1548,7 @@
         "description": "How set up gist, 1th step"
     },
     "helpPageHowToGithubGistCreateTokenDesc": {
-        "message": "You need to create a private token in your GitHub account. The token should only be stored by you and in the STG settings. It will be used to transfer your tabs to your GitHub account.",
+        "message": "You need to create a private token in your GitHub account. The token should only be stored by you and in the __MSG_extensionName__ settings. It will be used to transfer your tabs to your GitHub account.",
         "description": "How set up gist, 2th step"
     },
     "helpPageHowToGithubGistCreateTokenPermission": {
@@ -1564,7 +1564,7 @@
         "description": "How set up gist, personal token"
     },
     "helpPageHowToGithubGistWriteToSettings": {
-        "message": "Write the created token to the STG settings.",
+        "message": "Write the created token to the __MSG_extensionName__ settings.",
         "description": "How set up gist, write token to the STG settings"
     },
     "helpPageHowToGithubGistSave": {
