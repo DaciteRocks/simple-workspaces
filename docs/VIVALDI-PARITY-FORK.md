@@ -65,11 +65,38 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | Phase | Scope | Status |
 | ----- | ----- | ------ |
 | 0 | Recon; spec into repo; branch `vivaldi-parity` | done 2026-09-14 |
-| 1 | §4.4 single-active: `js/groups-native-exclusive.js`, hooked on `tabGroups.onUpdated` (collapsed → false transition) and after `GroupsNative.apply`; option `singleExpandedNativeGroup` (default **on**) with Options UI + en locale | pending |
+| 1 | §4.4 single-active: `js/groups-native-exclusive.js`; option `singleExpandedNativeGroup` (default **on**) with Options UI + en locale | done 2026-09-14 (see 0.4) |
 | 2 | Fork identity: manifest id/name/version, README section for building/loading/signing, `chrome/userChrome.css` companion committed with install notes | pending |
 | 3 | Edge cases (§5) audit against upstream behavior + manual test checklist for the user (switch, restart, single-active, header drag, pinned) | pending |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
+
+### 0.4 Phase 1 — what landed
+
+`addon/src/js/groups-native-exclusive.js`, registered from `background.js` `addEvents()` / `removeEvents()`:
+
+- **Triggers:** (a) `tabGroups.onUpdated` with a remembered collapsed → expanded transition (rename/recolor
+  updates are ignored by comparing against the last known flag); (b) `tabGroups.onCreated` of an expanded
+  group (the browser's own "add tabs to new group" is born expanded, §7); (c) `tabGroups.onMoved` of an
+  expanded group (arrival from another window, §16); (d) after `GroupsNative.apply` / `restoreMembership`
+  / `reconcileWindow`; (e) switching the option on.
+- **Action:** `tabGroups.update(id, {collapsed: true})` on every other expanded group of that window. The
+  module only ever collapses, so it cannot feed itself. Collapsing the group holding the active tab is
+  safe (§5: the active tab stays drawn outside the header).
+- **Which group survives:** the one the user opened; otherwise the one holding the active tab; otherwise
+  the first reported. While an STG composite operation is running (`Operations.isBusy()`), the request
+  is parked per window and runs on idle; an explicit "keep this one" is never overwritten by a later
+  state-based request from the same operation.
+- **Persistence caveat (by design, flagged in review):** the mirror in `groups-native.js` records the
+  enforced collapses into `group.groupsNative[].collapsed` exactly as it would a user collapse, so a
+  workspace saved with several expanded sub-groups is rewritten to single-expanded the first time it
+  is loaded with the option on. Turning the option off later does not bring the old layout back.
+- **Review (phase-review + code-review, merged):** both found the `onCreated` gap and the module-scope
+  storage listener running in UI pages (fixed: listener registered in `addListeners`, background only).
+  Only phase-review found `onMoved`; only code-review found the parked-null overwrite. Skipped: a
+  proposed shared "defer while busy" helper — it would refactor upstream code in `groups-native.js`
+  and raise merge cost for a duplicate that is 15 lines.
+- **Locales:** English only; ru/uk fall back to `default_locale` via `i18n.getMessage`.
 
 ---
 

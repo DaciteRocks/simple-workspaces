@@ -430,6 +430,7 @@ function removeEvents() {
     Windows.removeListeners();
     GroupsExternal.removeListeners();
     GroupsNative.removeListeners();
+    GroupsNativeExclusive.removeListeners();
 
     Permissions.onAdded.clear();
     Permissions.onRemoved.clear();
