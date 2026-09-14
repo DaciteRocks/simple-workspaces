@@ -103,15 +103,23 @@ Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-imp
 - **Manifest identity:** id `simple-tab-groups-vivaldi@dacite.dev`, name "Simple Tab Groups - Vivaldi
   Fork", short name `STG-V`, version `6.0.0.1` (digits only, AMO-safe). A distinct id is required to
   sign the fork as an unlisted AMO add-on (§6). Consequences: storage is per id, so an upstream STG
-  backup must be exported and imported once (README); STG plugins message the upstream id and do not
-  see the fork; `homepage_url` still points at upstream until a GitHub fork exists.
+  backup must be exported and imported once (README), with upstream disabled first; STG plugins and the
+  Windows backup host (`host/Settings.pas` allowed_extensions) accept only the upstream id and do not
+  work with the fork; `homepage_url` still points at upstream.
 - **Packaging:** `npm run build-zip` now works (upstream imported a non-existent `webpack.config.mjs`);
   it produces `addon/dist-zip/<id>-v<version>-{prod,dev}.zip`, the prod zip is what gets uploaded to
   AMO. `npm run dev` added as an alias of `watch`.
 - **Companion CSS:** `chrome/userChrome.css` (the v6 file from §8) with `chrome/README.md` install
   notes. The profile path in §8 is machine-specific; the README describes the generic path.
-- **Not done here:** the actual AMO submission (needs the user's developer account) and the GitHub
-  fork / `origin` remote.
+- **Not done here:** the actual AMO submission (needs the user's developer account).
+- **GitHub fork:** <https://github.com/DaciteRocks/simple-tab-groups>, remote `origin`, branch `vivaldi-parity`.
+- **Review (phase-review + code-review, merged):** 0 kept, 4 noted and applied. Both reviewers found the
+  toolbar/sidebar titles still reading "Simple Tab Groups" (fixed: en `extensionName` renamed, which
+  also gives the fork its own bookmarks root folder). Only code-review found the migration steps never
+  disabled upstream (fixed in README, and upstream's id added to `CONFLICTED_EXTENSIONS` so the fork
+  warns when both run). Only phase-review found the backup-host id limit and the stale Gesturefy id
+  (both documented). Dropped by the verifier: code-review's claim that `6.0.0.1` makes upstream reject
+  fork data — `isDataVersionNewer` compares majors only (`compareNumericVersions` returns 4, not 1).
 
 ---
 

@@ -227,6 +227,7 @@ export const CONFLICTED_EXTENSIONS_FOR_REOPEN_TAB_IN_CONTAINER = Object.freeze([
 ]);
 
 export const CONFLICTED_EXTENSIONS = Object.freeze([
+    'simple-tab-groups@drive4ik', // upstream STG - the Vivaldi fork manages the same tabs and native groups
     'tab_open_close_control@felix-kolbe.de', // https://addons.mozilla.org/firefox/addon/tab-open-close-control/
     'extension@one-tab.com', // https://addons.mozilla.org/firefox/addon/onetab/
     '{dcdaadfa-21f1-4853-9b34-aad681fff6f3}', // https://addons.mozilla.org/firefox/addon/tiled-tab-groups/

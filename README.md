@@ -13,9 +13,13 @@
 > [`chrome/`](chrome/README.md). Upstream: <https://github.com/Drive4ik/simple-tab-groups>.
 >
 > **Migrating from upstream STG:** the fork has its own add-on id, so it starts with empty storage.
-> In upstream STG create a backup (Options → Backup → Export), install the fork, then import that
-> file in the fork's options. STG plugins (group notes, etc.) talk to the upstream id and will not see
-> the fork.
+> 1. In upstream STG open Options → "Backup your Simple Tab Groups" → **Create backup**.
+> 2. **Disable or remove upstream STG** in `about:addons`. Both add-ons hide and show the same tabs
+>    and manage the same native groups; running them side by side corrupts both.
+> 3. Install the fork, open its Options → **Restore backup**, and pick the file from step 1.
+>
+> What does not carry over: STG plugins (group notes, etc.) and the Windows backup host (STGHost)
+> only accept the upstream id. In the fork, pick a backup location other than the host.
 >
 > Build: `cd addon && npm install && npm run build`, then `about:debugging` → *Load Temporary
 > Add-on* → `addon/dist/manifest.json`. `npm run dev` rebuilds on change. `npm run build-zip` produces
@@ -72,7 +76,7 @@ Allow import groups from addons "Panorama View" and "Sync Tab Groups".
 
 You have to copy and paste into Gesturefy addon
 
-`Add-on ID` : `simple-tab-groups@drive4ik`
+`Add-on ID` : `simple-tab-groups@drive4ik` (upstream) or `simple-tab-groups-vivaldi@dacite.dev` (this fork)
 
 `Parse message` -> `On`
 
