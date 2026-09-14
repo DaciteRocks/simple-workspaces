@@ -133,13 +133,13 @@ native-group layer or is a browser limitation that can only be confirmed by hand
 | §5 item | State | Where / why |
 | - | - | - |
 | Group-id instability | handled | stable 8-char ids in `group.groupsNative[].id`, live↔stable maps in `groups-native.js`; the exclusive module keys on live ids only for the lifetime of one window and drops them on `onRemoved` |
-| Ordering & contiguity | handled | `Tabs.moveNative` gathers a workspace as one block before `GroupsNative.apply`; `tabs.group` preserves the order we pass (§3, implication 5) |
+| Ordering & contiguity | handled | on a normal same-window switch, `tabs.group` pulls the members to the first one and keeps the order we pass (§3, implication 5); `Tabs.moveNative` gathers the workspace into one block first only when some of its tabs are in another window (`groups.js` applyNow) |
 | Tab identity across restart | handled | membership is a `sessions.setTabValue` on the tab, which Firefox itself carries across restart (§6); no URL/position heuristic needed |
 | Pinned tabs | handled by the browser | pinning strips native membership itself (§19), unpin does not restore it; `queryWindowTabs` excludes pinned; the exclusive module never touches pinned tabs (groups cannot contain them) |
 | Split view | **unverified, likely still broken** | upstream #1352 (open, no response): hiding a split-view tab leaves an empty placeholder tab. No split-view handling exists in `addon/src`. Test 7 below; fix would be a follow-up phase |
 | Containers (`cookieStoreId`) | handled | membership rides on the tab, independent of container; upstream #1227 (open) describes container groups acting as pinned — a Firefox-side behavior, test 8 |
 | Window scoping | handled | native groups are window-scoped (§16); `apply`/`enforceWindow` take a `windowId`; a group moved to another window keeps its live id and is re-enforced via `onMoved` |
-| Races / feedback loops | handled | `Operations.isBusy()` parks both the mirror and the enforcement until idle; the exclusive module only collapses, so its own `onUpdated` events never re-trigger it |
+| Races / feedback loops | handled | `Operations.isBusy()` parks both the mirror and the enforcement until idle; the exclusive module only collapses, so its own `onUpdated` events never re-trigger it. Groups the addon itself creates during a rebuild are born expanded (§3) and do not claim the kept slot, so the group holding the active tab wins (fixed in phase 3 review) |
 | Header-drag flicker (§14) | handled | the drag collapses the group and re-expands it on drop; that re-expand is a real transition and keeps the dragged group, collapsing others — consistent with "the group you touched is the open one" |
 
 #### Manual test plan (Firefox 155, fork loaded as temporary add-on, `chrome/userChrome.css` installed)
@@ -154,7 +154,7 @@ browser's tab context menu; in W2 create group C (2 tabs).
 | 3 | Select two ungrouped tabs → "Add tabs to new group" while A is expanded | the new group is expanded and A collapses |
 | 4 | Rename B (type several characters) while A is expanded | A stays expanded; nothing collapses (rename is not an expand) |
 | 5 | Switch W1 → W2 → W1 via the STG popup | no A/B headers visible in W2 (no bleed); back in W1 A and B are rebuilt with their titles/colors and at most one expanded |
-| 6 | Quit Firefox fully, restart, wait for STG to settle | W1's groups come back grouped, titles and colors intact, at most one expanded |
+| 6 | **Needs a signed build.** A temporary add-on is gone after a restart, and Firefox restores groups, titles and collapsed flags on its own (§6), so a temporary run would pass with the fork absent. Steps: untick the option; expand both A and B; activate a tab in A; quit Firefox fully; restart; tick the option again | right after ticking, B collapses and A, which holds the active tab, stays open; switching W1 and W2 still rebuilds both workspaces |
 | 7 | Put two tabs of A in split view, switch to W2 | **known risk (#1352):** check whether an empty placeholder tab appears in W2; record the result in this table |
 | 8 | Create a container tab inside A, switch W1 → W2 → W1 | the container tab is back inside A |
 | 9 | With B expanded and A collapsed, drag B's header to another position | B is still expanded after the drop and A stays collapsed (§14: the drag collapses then re-expands B; that re-expand keeps B). Dragging a *collapsed* header is not covered by §14 — note what happens |
@@ -164,6 +164,14 @@ browser's tab context menu; in W2 create group C (2 tabs).
 
 **Not run yet.** This session cannot drive the Firefox UI, so none of the 12 checks has a result. Record
 pass/fail per row when run; anything that fails becomes its own phase.
+
+**Review (phase-review + code-review, merged):** 1 kept, 2 noted, all applied. Kept (phase-review only):
+test 6 could not catch anything with a temporary add-on, rewritten to need a signed build. Noted (code-review
+only): during a workspace rebuild the addon's own expanded groups claimed the kept slot, so the last
+rebuilt group won over the one holding the active tab; fixed in `groups-native-exclusive.js` by
+`userKeepId`, which gives no keep id to arrivals while an addon operation is running. Noted (both): the
+ordering row named `Tabs.moveNative`, which only runs for cross-window tabs. Dropped as pedantic: test 12
+log wording, "lifetime of one window" phrasing, the intro vs split-view wording, a §16/§17 citation.
 
 ---
 

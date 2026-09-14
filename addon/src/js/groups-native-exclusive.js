@@ -20,7 +20,8 @@ import * as Operations from './operations.js';
 //   real expand counts. An unknown previous state (a group whose onCreated was missed) never counts.
 // - a group that ARRIVES expanded fires no transition: a group born from the browser's own
 //   "add tabs to new group" (onCreated, expanded with an empty title - §7) or one moved in from
-//   another window (onMoved only - §16). Those count as the user opening that group.
+//   another window (onMoved only - §16). Those count as the user opening that group. Arrivals
+//   during an addon operation (a workspace rebuild) do not - there the active tab decides.
 // - the addon only ever COLLAPSES, so its own updates can never re-trigger it: no feedback loop.
 // - collapsing a group that holds the active tab is fine - the browser keeps drawing the active tab
 //   outside the collapsed header (docs/TABGROUPS-BEHAVIOR.md §5).
@@ -74,8 +75,8 @@ function onCreated(groupNative) {
     remember(groupNative);
 
     if (!groupNative.collapsed) {
-        // born expanded (§7) - the user just opened this one
-        scheduleEnforce(groupNative.windowId, groupNative.id);
+        // born expanded (§7) - the user just opened this one, unless it is the addon's own rebuild
+        scheduleEnforce(groupNative.windowId, userKeepId(groupNative));
     }
 }
 
@@ -99,8 +100,15 @@ function onMoved(groupNative) {
     if (!groupNative.collapsed) {
         // arrived expanded from another window (§16); a header drag inside the window is
         // collapsed while it moves (§14) and re-expands through onUpdated
-        scheduleEnforce(groupNative.windowId, groupNative.id);
+        scheduleEnforce(groupNative.windowId, userKeepId(groupNative));
     }
+}
+
+// a group that arrives while an addon operation is running is the addon's own doing (GroupsNative.apply
+// creates every sub-group expanded, §3) - it must not claim the keep, or the last rebuilt group would win
+// over the one holding the active tab
+function userKeepId(groupNative) {
+    return Operations.isBusy() ? null : groupNative.id;
 }
 
 function onRemoved(groupNative) {
