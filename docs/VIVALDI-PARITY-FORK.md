@@ -113,7 +113,7 @@ Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-imp
 - **Companion CSS:** `chrome/userChrome.css` (the v6 file from §8) with `chrome/README.md` install
   notes. The profile path in §8 is machine-specific; the README describes the generic path.
 - **Not done here:** the actual AMO submission (needs the user's developer account).
-- **GitHub fork:** <https://github.com/DaciteRocks/simple-workspaces> (renamed from `simple-tab-groups` in phase 4), remote `origin`, branch `vivaldi-parity`.
+- **GitHub repo:** <https://github.com/DaciteRocks/simple-workspaces>, **private and detached from the upstream fork network** since 2026-09-14 (renamed from `simple-tab-groups` in phase 4). Remote `origin`, branch `vivaldi-parity`. Upstream changes still come in through the local `upstream` remote.
 - **Review (phase-review + code-review, merged):** 0 kept, 4 noted and applied. Both reviewers found the
   toolbar/sidebar titles still reading "Simple Tab Groups" (fixed: en `extensionName` renamed, which
   also gives the fork its own bookmarks root folder). Only code-review found the migration steps never
@@ -184,7 +184,7 @@ log wording, "lifetime of one window" phrasing, the intro vs split-view wording,
 - **Manifest:** `short_name` `Workspaces`, `homepage_url` points at the fork. `author` stays upstream's,
   since the code is theirs under MPL-2.0.
 - **GitHub:** repo renamed to `DaciteRocks/simple-workspaces`; GitHub redirects the old URL. The local
-  folder keeps its `simple-tab-groups` name.
+  folder keeps its `simple-tab-groups` name. The repo left the fork network and is private, so `homepage_url` and the DB-error "Install" link only resolve for the owner.
 - **Review (phase-review + code-review, merged):** code-review found nothing. Phase-review found 12 English
   strings still calling the product "STG" (verifier: NOTE 70), applied: they now use `__MSG_extensionName__`.
   The DB-error help page's "Install" link now points at the fork instead of upstream's AMO listing.
