@@ -1012,6 +1012,15 @@ export default {
                 </span>
             </label>
             <label class="checkbox">
+                <input v-model="options.singleExpandedNativeGroup" type="checkbox" />
+                <span class="icon-text">
+                    <span v-text="lang('singleExpandedNativeGroup')"></span>
+                    <figure class="icon image is-16x16 cursor-help" :title="lang('singleExpandedNativeGroupHelp')">
+                        <img src="/icons/help.svg" />
+                    </figure>
+                </span>
+            </label>
+            <label class="checkbox">
                 <input v-model="options.showConfirmDialogBeforeGroupArchiving" type="checkbox" />
                 <span v-text="lang('showConfirmDialogBeforeGroupArchiving')"></span>
             </label>

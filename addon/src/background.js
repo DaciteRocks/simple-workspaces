@@ -45,6 +45,7 @@ import * as MenusMain from '/js/menus-main.js';
 // import * as MenusBookmark from '/js/menus-bookmark.js';
 import * as Groups from '/js/groups.js';
 import * as GroupsNative from '/js/groups-native.js';
+import * as GroupsNativeExclusive from '/js/groups-native-exclusive.js';
 import * as GroupsExternal from '/js/groups-external.js';
 import * as Operations from '/js/operations.js';
 import * as Tabs from '/js/tabs.js';
@@ -411,6 +412,7 @@ function addEvents() {
     Windows.addListeners();
     GroupsExternal.addListeners();
     GroupsNative.addListeners();
+    GroupsNativeExclusive.addListeners();
 
     Permissions.onAdded.add(onPermissionsAdded);
     Permissions.onRemoved.add(onPermissionsRemoved);

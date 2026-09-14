@@ -12,6 +12,7 @@ import * as Operations from './operations.js';
 import * as Storage from './storage.js';
 import * as Tabs from './tabs.js';
 import * as Groups from './groups.js';
+import * as GroupsNativeExclusive from './groups-native-exclusive.js';
 
 export const TAB_GROUP_ID_NONE = browser.tabGroups.TAB_GROUP_ID_NONE;
 
@@ -595,6 +596,9 @@ async function applyNow(windowId, group) {
         }
     }
 
+    // several entries may come back expanded - one survives (Vivaldi single-active), settled on idle
+    GroupsNativeExclusive.scheduleEnforce(windowId);
+
     if (!isSameGroupsNative(group.groupsNative, appliedGroupsNative)) {
         group.groupsNative = appliedGroupsNative;
         await Groups.update(group.id, {groupsNative: appliedGroupsNative});
@@ -813,6 +817,7 @@ export async function restoreMembership(group, movedTabs, snapshot = null) {
 
         // the mirror picks the created sub-groups up into the active group's metadata
         scheduleMirrorWindow(windowId);
+        GroupsNativeExclusive.scheduleEnforce(windowId);
     } else {
         const groupsNative = group.groupsNative?.slice() ?? [];
         const knownIds = new Set(groupsNative.map(entry => entry.id));
@@ -868,6 +873,7 @@ export async function reconcileWindow(windowId, afterRestoring = false) {
         }
     } else {
         await mirrorWindow(windowId);
+        GroupsNativeExclusive.scheduleEnforce(windowId);
         log.stop('mirrored from browser');
     }
 }
