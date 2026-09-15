@@ -258,6 +258,14 @@ Goal from the user: testing locally should be as easy as possible, with everythi
 - **`npm run test:firefox:reset`:** deletes the test profile.
 - **Limit:** the restart test in this setup reinstalls the temporary add-on after Firefox restores tabs,
   which is close to but not the same as a restart with an installed add-on.
+- **Review (phase-review + code-review, merged):** 2 kept, 3 noted, all applied. Both found that the build
+  watcher discarded webpack's stdout, so a broken rebuild was silent (watcher now inherits stdout with
+  `--stats errors-only`), and that the profile match was a substring, so the smoke profile and the real one
+  matched each other (now the exact `-profile` argument, and only the smoke run deletes its profile). Both
+  noted that a failed first launch left the folder and skipped the checklist forever (a profile is now "used"
+  only once Firefox wrote `prefs.js` or `times.json`). Only phase-review noted that web-ext's profile defaults
+  disable crash recovery while Ctrl+C is a hard kill (`browser.sessionstore.resume_from_crash` set true, and
+  closing the window is the recommended stop) and that an unknown saved answer broke the checklist render.
 
 ---
 

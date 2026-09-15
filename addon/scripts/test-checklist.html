@@ -221,8 +221,9 @@ TESTS.forEach((test, i) => {
     card.querySelector('.expected span').textContent = test.expected;
 
     const saved = state[id] ?? {};
-    if (saved.result) {
-        card.querySelector(`input[value="${saved.result}"]`).checked = true;
+    const savedInput = saved.result && card.querySelector(`input[value="${saved.result}"]`);
+    if (savedInput) {
+        savedInput.checked = true;
     }
     const notes = card.querySelector('textarea');
     notes.value = saved.notes ?? '';

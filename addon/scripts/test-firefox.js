@@ -36,6 +36,8 @@ const PREFS = {
     'toolkit.legacyUserProfileCustomizations.stylesheets': true,
     // reopen the previous session, so a second run tests restoring workspaces and groups
     'browser.startup.page': 3,
+    // web-ext's profile defaults turn crash recovery off; a stop by Ctrl+C is a hard kill, keep the session
+    'browser.sessionstore.resume_from_crash': true,
     // keep workspaces when web-ext removes the temporary add-on on exit
     'extensions.webextensions.keepStorageOnUninstall': true,
     'extensions.webextensions.keepUuidOnUninstall': true,
@@ -50,6 +52,10 @@ const PREFS = {
 
 const args = new Set(process.argv.slice(2));
 const children = new Set;
+
+// the one profile this run started Firefox with, and whether it is thrown away on exit (smoke)
+let activeProfileDir = null;
+let deleteProfileOnExit = false;
 
 function log(...message) {
     console.log('[test:firefox]', ...message);
@@ -79,17 +85,24 @@ function killTree(child) {
     }
 }
 
-// stop only Firefox processes that were started with the test profile
-function stopTestProfileFirefox() {
+// stop only Firefox processes started with exactly this profile: the path must be the whole -profile
+// argument, so the smoke profile (a longer path with the same start) and the user's own Firefox never match
+function stopFirefoxWithProfile(profileDir) {
+    if (!profileDir) {
+        return;
+    }
+
     if (IS_WINDOWS) {
-        const profile = PROFILE_DIR.replace(/'/g, "''");
-        spawnSync('powershell', ['-NoProfile', '-Command',
+        const profile = profileDir.replace(/'/g, "''");
+        const script =
+            `$pattern = '-profile\\s+"?' + [regex]::Escape('${profile}') + '"?(\\s|$)'; ` +
             `Get-CimInstance Win32_Process -Filter "Name='firefox.exe'" | ` +
-            `Where-Object { $_.CommandLine -and $_.CommandLine.Contains('${profile}') } | ` +
-            'ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }',
-        ], {stdio: 'ignore'});
+            'Where-Object { $_.CommandLine -and $_.CommandLine -match $pattern } | ' +
+            'ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }';
+        spawnSync('powershell', ['-NoProfile', '-Command', script], {stdio: 'ignore'});
     } else {
-        spawnSync('pkill', ['-f', PROFILE_DIR], {stdio: 'ignore'});
+        const escaped = profileDir.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        spawnSync('pkill', ['-f', `-profile "?${escaped}"?( |$)`], {stdio: 'ignore'});
     }
 }
 
@@ -97,10 +110,10 @@ function cleanupAndExit(code) {
     for (const child of children) {
         killTree(child);
     }
-    stopTestProfileFirefox();
+    stopFirefoxWithProfile(activeProfileDir);
 
-    if (fs.existsSync(SMOKE_PROFILE_DIR)) {
-        fs.rmSync(SMOKE_PROFILE_DIR, {recursive: true, force: true});
+    if (deleteProfileOnExit && activeProfileDir) {
+        fs.rmSync(activeProfileDir, {recursive: true, force: true});
     }
 
     process.exit(code);
@@ -162,8 +175,13 @@ function webExtArgs({profileDir, isNewProfile, smoke}) {
     return list;
 }
 
+// a profile counts as used once Firefox itself has written to it, not when this script created the folder
+function isUsedProfile(profileDir) {
+    return ['prefs.js', 'times.json'].some(file => fs.existsSync(path.join(profileDir, file)));
+}
+
 function resetProfile() {
-    stopTestProfileFirefox();
+    stopFirefoxWithProfile(PROFILE_DIR);
     fs.rmSync(PROFILE_DIR, {recursive: true, force: true});
     log('test profile deleted:', path.relative(REPO_DIR, PROFILE_DIR));
 }
@@ -173,6 +191,8 @@ async function smokeTest() {
     buildOnce();
 
     fs.rmSync(SMOKE_PROFILE_DIR, {recursive: true, force: true});
+    activeProfileDir = SMOKE_PROFILE_DIR;
+    deleteProfileOnExit = true;
     installUserChrome(SMOKE_PROFILE_DIR);
 
     log('starting headless Firefox to check the add-on installs...');
@@ -209,11 +229,13 @@ async function interactive() {
     checkPrerequisites();
     buildOnce();
 
-    const isNewProfile = !fs.existsSync(PROFILE_DIR);
+    const isNewProfile = !isUsedProfile(PROFILE_DIR);
+    activeProfileDir = PROFILE_DIR;
     installUserChrome(PROFILE_DIR);
 
     log('watching for code changes, the add-on reloads by itself after each rebuild');
-    const watcher = run(WEBPACK_BIN, ['--mode', 'production', '--watch'], {stdio: ['ignore', 'ignore', 'inherit']});
+    log('a broken rebuild prints its errors here and the add-on keeps the last good build');
+    const watcher = run(WEBPACK_BIN, ['--mode', 'production', '--watch', '--stats', 'errors-only'], {stdio: ['ignore', 'inherit', 'inherit']});
     watcher.on('exit', code => {
         if (code) {
             log('the build watcher stopped, code', code);
@@ -223,7 +245,7 @@ async function interactive() {
     log(isNewProfile
         ? 'opening Firefox with a new test profile and the test checklist'
         : 'opening Firefox with your existing test profile');
-    log('close that Firefox window, or press Ctrl+C here, to stop');
+    log('to stop, close that Firefox window; Ctrl+C here also works but force-closes Firefox');
 
     const webExt = run(WEB_EXT_BIN, webExtArgs({profileDir: PROFILE_DIR, isNewProfile, smoke: false}), {stdio: 'inherit'});
     webExt.on('exit', code => {
