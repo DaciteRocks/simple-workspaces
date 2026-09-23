@@ -1,5 +1,5 @@
 import Listeners from './listeners.js\
-?tabGroups.onCreated\
+?tabs.onActivated&tabGroups.onCreated\
 &tabGroups.onUpdated\
 &tabGroups.onMoved\
 &tabGroups.onRemoved\
@@ -13,6 +13,12 @@ import * as Operations from './operations.js';
 // at most ONE native group per window is expanded. When the user expands a group, every other
 // expanded group in that window is collapsed by the addon, so a userChrome.css layer keyed on
 // `tab-group:not([collapsed])` always shows exactly one group on its bottom bar.
+//
+// Which group survives: the one the user explicitly opened; otherwise the one holding the active tab;
+// otherwise NONE. So selecting a top-bar tab - an ungrouped tab, a pinned tab, or the active tab of a
+// collapsed group (drawn beside its header, docs/TABGROUPS-BEHAVIOR.md §5) - collapses every expanded
+// group of that window and the bottom bar goes away (tabs.onActivated is that trigger). Selecting a tab
+// inside the expanded group changes nothing. Activating a tab of a collapsed group never expands it.
 //
 // - the main trigger is the collapsed:true → false TRANSITION of a live group. tabGroups.onUpdated
 //   also fires for rename (per keystroke) and recolor (docs/TABGROUPS-BEHAVIOR.md §15) with
@@ -29,7 +35,9 @@ import * as Operations from './operations.js';
 //   parked per window and runs once on idle, when the active tab is settled - a rebuilt workspace
 //   whose metadata has several expanded groups keeps the one holding the active tab.
 // - the mirror in groups-native.js records the resulting collapsed flags into the workspace
-//   metadata like any user collapse - the single-expanded layout is what gets persisted.
+//   metadata like any user collapse - the single-expanded layout is what gets persisted. With the
+//   activation rule "expanded" is a function of the active tab plus the last explicit expand, so a
+//   stored flag only ever decides a group the active tab does not decide; no extra storage is kept.
 // - native groups are window-scoped, so is everything here. Live ids never leave this module.
 // - this module is imported by every extension page through groups.js; only the background page
 //   calls addListeners(), so only the background ever touches the browser from here.
@@ -115,9 +123,23 @@ function onRemoved(groupNative) {
     collapsedByLiveId.delete(groupNative.id);
 }
 
+// a top-bar tab selected → the expanded group (if it does not hold that tab) collapses. No keep id:
+// the active tab decides. During an addon operation this is parked like any other request, so the
+// activations of a workspace rebuild are folded into one decision on idle
+async function onActivated({tabId}) {
+    const tab = await browser.tabs.get(tabId).catch(() => null);
+
+    if (!tab) {
+        return; // closed before we got here
+    }
+
+    scheduleEnforce(tab.windowId);
+}
+
 let unsubscribeIdle = null;
 
 export function addListeners(options) {
+    Listeners.tabs.onActivated.add(onActivated, options);
     Listeners.tabGroups.onCreated.add(onCreated, options);
     Listeners.tabGroups.onUpdated.add(onUpdated, options);
     Listeners.tabGroups.onMoved.add(onMoved, options);
@@ -130,6 +152,7 @@ export function addListeners(options) {
 }
 
 export function removeListeners() {
+    Listeners.tabs.onActivated.remove(onActivated);
     Listeners.tabGroups.onCreated.remove(onCreated);
     Listeners.tabGroups.onUpdated.remove(onUpdated);
     Listeners.tabGroups.onMoved.remove(onMoved);
@@ -172,7 +195,7 @@ export function scheduleEnforce(windowId, keepLiveId = null) {
 }
 
 // which expanded group survives: the one asked for (the user just expanded it), otherwise the one
-// holding the window's active tab, otherwise the first the browser reports
+// holding the window's active tab, otherwise none (the active tab is on the top bar)
 async function pickGroupToKeep(windowId, expandedGroups, keepLiveId) {
     if (keepLiveId !== null) {
         const asked = expandedGroups.find(groupNative => groupNative.id === keepLiveId);
@@ -192,10 +215,10 @@ async function pickGroupToKeep(windowId, expandedGroups, keepLiveId) {
         }
     }
 
-    return expandedGroups[0];
+    return null;
 }
 
-// collapse every expanded group in the window except one
+// collapse every expanded group in the window except the one to keep, if any
 export async function enforceWindow(windowId, keepLiveId = null) {
     if (!settings.singleExpandedNativeGroup) {
         return;
@@ -203,14 +226,18 @@ export async function enforceWindow(windowId, keepLiveId = null) {
 
     const expandedGroups = await browser.tabGroups.query({windowId, collapsed: false});
 
-    if (expandedGroups.length < 2) {
+    if (!expandedGroups.length) {
         return;
     }
 
     const groupToKeep = await pickGroupToKeep(windowId, expandedGroups, keepLiveId);
-    const groupsToCollapse = expandedGroups.filter(groupNative => groupNative.id !== groupToKeep.id);
+    const groupsToCollapse = expandedGroups.filter(groupNative => groupNative.id !== groupToKeep?.id);
 
-    const log = logger.start(enforceWindow, windowId, 'keep:', groupToKeep.id, 'collapse:', groupsToCollapse.map(groupNative => groupNative.id));
+    if (!groupsToCollapse.length) {
+        return;
+    }
+
+    const log = logger.start(enforceWindow, windowId, 'keep:', groupToKeep?.id ?? null, 'collapse:', groupsToCollapse.map(groupNative => groupNative.id));
 
     await Promise.all(groupsToCollapse.map(groupNative => {
         return browser.tabGroups.update(groupNative.id, {collapsed: true})

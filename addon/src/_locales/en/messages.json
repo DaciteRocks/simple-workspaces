@@ -654,8 +654,8 @@
         "description": "Keep only one native tab group expanded at a time (Vivaldi-style)"
     },
     "singleExpandedNativeGroupHelp": {
-        "message": "When you expand a native tab group, every other expanded group in the same window is collapsed automatically, so exactly one group's tabs are shown at a time. The same rule is applied after a group is loaded into a window or restored on startup.",
-        "description": "When you expand a native tab group, every other expanded group in the same window is collapsed automatically, so exactly one group's tabs are shown at a time. The same rule is applied after a group is loaded into a window or restored on startup."
+        "message": "When you expand a native tab group, every other expanded group in the same window is collapsed automatically, so exactly one group's tabs are shown at a time. The same rule is applied after a group is loaded into a window or restored on startup. Selecting a tab outside the expanded group, such as an ungrouped or pinned tab, collapses it.",
+        "description": "When you expand a native tab group, every other expanded group in the same window is collapsed automatically, so exactly one group's tabs are shown at a time. The same rule is applied after a group is loaded into a window or restored on startup. Selecting a tab outside the expanded group, such as an ungrouped or pinned tab, collapses it."
     },
     "prependTitleToWindow": {
         "message": "Prepend group title to window title",

@@ -89,10 +89,9 @@ Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-imp
   module only ever collapses, so it cannot feed itself. Collapsing the group holding the active tab is
   safe (§5: the active tab stays drawn outside the header).
 - **Which group survives:** the one the user opened; otherwise the one holding the active tab; otherwise
-  the first reported. While an STG composite operation is running (`Operations.isBusy()`), the request
+  none (phase 7 — it was "the first reported" until then, see 0.10). While an STG composite operation is running (`Operations.isBusy()`), the request
   is parked per window and runs on idle; an explicit "keep this one" is never overwritten by a later
-  state-based request from the same operation. (Phase 7 replaces "otherwise the first reported" with
-  "otherwise none" — see 0.10.)
+  state-based request from the same operation.
 - **Persistence caveat (by design, flagged in review):** the mirror in `groups-native.js` records the
   enforced collapses into `group.groupsNative[].collapsed` exactly as it would a user collapse, so a
   workspace saved with several expanded sub-groups is rewritten to single-expanded the first time it
@@ -167,10 +166,16 @@ browser's tab context menu; in W2 create group C (2 tabs).
 | 10 | Drag a single tab out of A into a new window | A survives in W1; the new window has one ungrouped tab (§16) and nothing is collapsed anywhere |
 | 11 | Options → untick "Keep only one native tab group expanded" → expand A and B | both stay expanded; re-tick → one collapses immediately |
 | 12 | `about:debugging` → Inspect the fork → console filter `GroupsNativeExclusive` | one `enforceWindow` line per collapse, none during rename |
+| 13 | A expanded with one of its tabs active; click an ungrouped tab on the top bar | A collapses; the bottom bar is gone; the clicked tab is active |
+| 14 | A expanded; click a pinned tab | same as 13 — a pinned tab counts as the top bar |
+| 15 | Active tab ungrouped; expand A from its header | A opens and stays open (explicit expand wins over the active tab); now click any top-bar tab → A collapses |
+| 16 | A expanded; switch to a tab of collapsed B with Ctrl+Tab or the toolbar popup | A collapses; B stays collapsed with its active tab drawn beside its header (§5); expanding B from the header shows its tabs |
+| 17 | A expanded with its active tab in it; close that tab (A keeps at least one other tab) | note which tab Firefox activates; if it is in A, A must stay expanded; if Firefox picks an ungrouped neighbour, A collapses — record which |
+| 18 | In W1 make an ungrouped tab active, switch W1 → W2 → W1 | W1 comes back with A and B both collapsed and the ungrouped tab active; in W2 the same rule holds for C |
 
-**Not run yet.** This session cannot drive the Firefox UI, so none of the 12 checks has a result. Record
-pass/fail per row when run; anything that fails becomes its own phase. Phase 7 appends rows 13–18
-(activation rule) to this table when it lands.
+**Not run yet.** This session cannot drive the Firefox UI, so none of the 18 checks has a result. Record
+pass/fail per row when run; anything that fails becomes its own phase. Rows 13–18 (activation rule)
+were added by phase 7 (0.10).
 
 **Review (phase-review + code-review, merged):** 1 kept, 2 noted, all applied. Kept (phase-review only):
 test 6 could not catch anything with a temporary add-on, rewritten to need a signed build. Noted (code-review
@@ -301,7 +306,8 @@ for it. What exists at the end:
   activations STG itself performs are therefore folded into the single idle-time decision — the module
   never fights `GroupsNative.apply`.
 - The module stays **collapse-only**. Activating a tab inside a collapsed group does not expand it (that
-  is also Firefox's own behavior, §5 R4.02); the user expands it from the header. See open question 1.
+  is also Firefox's own behavior, §5 R4.02); the user expands it from the header. User decision
+  2026-09-23: stay collapse-only, no auto-expand phase.
 - Option: gated by the existing `singleExpandedNativeGroup`, no new option — it is the same Vivaldi rule.
   The option's description string in `addon/src/_locales/en/messages.json` (key
   `singleExpandedNativeGroup`, the `...Description` entry beneath it) gains one sentence: selecting a tab
