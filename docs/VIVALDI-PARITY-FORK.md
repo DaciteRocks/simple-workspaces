@@ -71,6 +71,8 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | 4 | Rename to **Simple Workspaces**: display name, add-on id `simple-workspaces@dacite.dev`, short name, homepage, GitHub repo `DaciteRocks/simple-workspaces` | done 2026-09-14 (see 0.7) |
 | 5 | Publishing prep for a **listed** AMO release: new icon, Gist sync disabled and no data collection, privacy policy, `build-for-amo` script and reviewer README, listing draft, repo default branch | done 2026-09-14 (see 0.8); not yet exercised in a live Firefox |
 | 6 | One-command local testing: `npm run test:firefox` (build, watch, Firefox with a separate test profile, userChrome.css, checklist page), `:smoke`, `:reset` | done 2026-09-14 (see 0.9); smoke test passes headless |
+| 7 | §4.4 activation rule: activating a tab that is in no native tab group collapses the expanded group(s) of that window, so the lower bar disappears; the state-based "which group survives" rule becomes "the active tab's group, else none" | planned (see 0.10) |
+| 8 | User-visible terminology: the add-on's own groups are called **workspaces** in all English UI text; Firefox native groups are always **tab groups**; identifiers, keys and file names untouched | planned (see 0.11) |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
 
@@ -89,7 +91,8 @@ Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-imp
 - **Which group survives:** the one the user opened; otherwise the one holding the active tab; otherwise
   the first reported. While an STG composite operation is running (`Operations.isBusy()`), the request
   is parked per window and runs on idle; an explicit "keep this one" is never overwritten by a later
-  state-based request from the same operation.
+  state-based request from the same operation. (Phase 7 replaces "otherwise the first reported" with
+  "otherwise none" — see 0.10.)
 - **Persistence caveat (by design, flagged in review):** the mirror in `groups-native.js` records the
   enforced collapses into `group.groupsNative[].collapsed` exactly as it would a user collapse, so a
   workspace saved with several expanded sub-groups is rewritten to single-expanded the first time it
@@ -166,7 +169,8 @@ browser's tab context menu; in W2 create group C (2 tabs).
 | 12 | `about:debugging` → Inspect the fork → console filter `GroupsNativeExclusive` | one `enforceWindow` line per collapse, none during rename |
 
 **Not run yet.** This session cannot drive the Firefox UI, so none of the 12 checks has a result. Record
-pass/fail per row when run; anything that fails becomes its own phase.
+pass/fail per row when run; anything that fails becomes its own phase. Phase 7 appends rows 13–18
+(activation rule) to this table when it lands.
 
 **Review (phase-review + code-review, merged):** 1 kept, 2 noted, all applied. Kept (phase-review only):
 test 6 could not catch anything with a temporary add-on, rewritten to need a signed build. Noted (code-review
@@ -266,6 +270,149 @@ Goal from the user: testing locally should be as easy as possible, with everythi
   only once Firefox wrote `prefs.js` or `times.json`). Only phase-review noted that web-ext's profile defaults
   disable crash recovery while Ctrl+C is a hard kill (`browser.sessionstore.resume_from_crash` set true, and
   closing the window is the recommended stop) and that an unknown saved answer broke the checklist render.
+
+### 0.10 Phase 7 — activation rule: a top-bar tab closes the lower bar
+
+**Status:** planned
+
+**User feedback (verbatim):** "When I click on a tab that is in a tab group, it comes down a level. But
+when I click on a tab on the top bar I want the tabs on the lower level to disappear like it does in
+vivaldi."
+
+**Scope.** In `addon/src/js/groups-native-exclusive.js`, the state-based "which expanded group survives"
+rule changes from *the group holding the active tab, else the first reported* to **the group holding the
+active tab, else none**, and `tabs.onActivated` becomes a trigger. Net effect: activating any tab that is
+not inside an expanded native tab group — an ungrouped tab, a pinned tab, or the active tab of a
+*collapsed* group (Firefox draws it on the top bar beside the header, behavior doc §5) — collapses every
+expanded group in that window, so the userChrome.css bottom bar disappears. Activating a tab inside the
+expanded group changes nothing. An explicit expand (header click, "add tabs to new group", a group moved
+in from another window) still keeps that group even when the active tab is elsewhere — the user asked
+for it. What exists at the end:
+
+- `tabs.onActivated` handler: `tabs.get(tabId)` (catch a closed tab and return), then
+  `scheduleEnforce(windowId)` with no keep id. Subscribed through `Listeners` in `addListeners` /
+  `removeListeners` like the `tabGroups` events (`import Listeners from './listeners.js?...&tabs.onActivated'`).
+  No reference to `tabs.js` internals (`skip.tracking`, `skipTrackingWindows` are not exported).
+- `pickGroupToKeep` returns `null` when no explicit keep applies and the active tab's group is not among
+  the expanded ones; `enforceWindow` then collapses all, and its early return becomes "nothing expanded"
+  (`< 1`) instead of "fewer than two".
+- The parking rule is unchanged: while `Operations.isBusy()`, requests wait per window and run once on
+  idle; an explicit keep is never overwritten by a state-based one. During a workspace rebuild the
+  activations STG itself performs are therefore folded into the single idle-time decision — the module
+  never fights `GroupsNative.apply`.
+- The module stays **collapse-only**. Activating a tab inside a collapsed group does not expand it (that
+  is also Firefox's own behavior, §5 R4.02); the user expands it from the header. See open question 1.
+- Option: gated by the existing `singleExpandedNativeGroup`, no new option — it is the same Vivaldi rule.
+  The option's description string in `addon/src/_locales/en/messages.json` (key
+  `singleExpandedNativeGroup`, the `...Description` entry beneath it) gains one sentence: selecting a tab
+  outside the expanded group collapses it.
+- Persistence: enforced collapses are mirrored into `group.groupsNative[].collapsed` (0.4 caveat). Accepted
+  as is — with this rule "expanded" is a function of the active tab plus the last explicit expand, so a
+  stored flag only ever decides a group the active tab does not decide. Document that in the module's
+  header comment; no storage change.
+- Module header comment, §4.4 (already describes the rule below; check it matches what landed) and the
+  0.4 "which group survives" line updated. Rows 13–18 below appended to the §0.6 table and to `TESTS` in
+  `addon/scripts/test-checklist.html` (same wording style as its existing entries; bump `STORAGE_KEY` only
+  if the saved-answer shape changes, which it should not).
+
+Test rows to add (Firefox 155, setup as in §0.6: W1 with groups A and B, W2 with C):
+
+| # | Action | Expected |
+| - | - | - |
+| 13 | A expanded with one of its tabs active; click an ungrouped tab on the top bar | A collapses; the bottom bar is gone; the clicked tab is active |
+| 14 | A expanded; click a pinned tab | same as 13 — a pinned tab counts as the top bar |
+| 15 | Active tab ungrouped; expand A from its header | A opens and stays open (explicit expand wins over the active tab); now click any top-bar tab → A collapses |
+| 16 | A expanded; switch to a tab of collapsed B with Ctrl+Tab or the toolbar popup | A collapses; B stays collapsed with its active tab drawn beside its header (§5); expanding B from the header shows its tabs |
+| 17 | A expanded with its active tab in it; close that tab (A keeps at least one other tab) | note which tab Firefox activates; if it is in A, A must stay expanded; if Firefox picks an ungrouped neighbour, A collapses — record which |
+| 18 | In W1 make an ungrouped tab active, switch W1 → W2 → W1 | W1 comes back with A and B both collapsed and the ungrouped tab active; in W2 the same rule holds for C |
+
+**Budget:** 4 files touched (`groups-native-exclusive.js`, en `messages.json`, `test-checklist.html`, this
+spec); read first: `groups-native-exclusive.js` (229 lines), `operations.js` (45 lines), `tabs.js` lines
+40–60 and 199–230 (how `Listeners.tabs.onActivated` is subscribed), `docs/TABGROUPS-BEHAVIOR.md` §5.
+
+**Gate:** `cd addon && npm run build` green (no new warnings beyond the 9 baseline), `npx eslint addon/src`
+from the repo root with no new errors (1 pre-existing), `cd addon && npm run test:firefox:smoke` passes.
+
+**Verification:** `cd addon && npm run test:firefox`, run rows 13, 15 and 16 from the checklist page; row 13
+is the user's ask. `about:debugging` console filter `GroupsNativeExclusive` shows one `enforceWindow` line
+per top-bar click that collapsed something and none for clicks inside the expanded group.
+
+**Risks / unknowns:**
+
+- *Flicker during window load or restore.* Firefox activates tabs while `Windows.load` /
+  `reconcileWindow` run; if any of that happens outside an `Operations.run` scope, a group could collapse
+  and be re-applied within one rebuild. If row 5 or 18 shows a group blink, gate the handler additionally
+  on the per-window mirror gate in `groups-native.js` (same one that defers `mirrorWindow`), not on a timer.
+- *Tab close inside the expanded group (row 17).* Firefox's choice of the next active tab is not in the
+  behavior doc. If it picks an ungrouped neighbour and that feels wrong in use, the fix is a follow-up, not
+  a special case here: the rule "the bottom bar shows the active tab's group" is the point.
+- *Keyboard tab cycling.* Ctrl+Tab through several ungrouped tabs fires one `enforceWindow` each; each is
+  one `tabGroups.query` and returns early once nothing is expanded. No debounce needed; add one only if
+  the log shows repeated collapse calls.
+- *Other locales* fall back to English for the changed description string, as in phase 1.
+
+### 0.11 Phase 8 — "workspaces" in all English UI text
+
+**Status:** planned
+
+**User feedback (verbatim):** "can we change the name of the window groups to workspaces instead of
+groups? there are two 'tab groups' now and that is confusing."
+
+**Scope.** Every English string a user can see calls the add-on's own per-window tab sets **workspaces**,
+and Firefox's native groups **tab groups** — never a bare "group". Text only: no identifier, storage key,
+message key, hotkey command name, CSS class or file name changes (keeps upstream merge cost low; same
+precedent as phase 4, which removed "STG" from English UI text without touching keys). English only;
+every other locale stays as it is and keeps falling back per key.
+
+Term table the implementer applies, string by string (105 of the 347 en messages mention "group"):
+
+| Meaning in the string | Write |
+| - | - |
+| An STG group (what the popup lists, hotkeys load, backups export, menus move tabs to) | workspace / workspaces / Workspace |
+| A Firefox native group (the two options `cloneSubGroupsWhenMovingTabs`, `singleExpandedNativeGroup`, and any string about collapsing / expanding / headers) | tab group — and where the same sentence also names an STG group, that one is "workspace" ("…the native tab group of tabs moved to another workspace") |
+| Third-party product names: Quicksaver's "Tab Groups", Morikko's "Sync Tab Groups", upstream "Simple Tab Groups" | unchanged |
+| `newGroupTitle` `"Group $id$"` | `"Workspace $id$"` — existing saved titles are data and are not migrated |
+| `extensionDescription` "Create, modify and quickly change tab groups" | "…workspaces" (this is the AMO/about:addons one-liner) |
+| Translator-facing `description` fields inside `messages.json` | unchanged (not user-visible) |
+| Folder / file names shown in UI (`STG-backups`, bookmark root = `extensionName`) | unchanged (real names) |
+
+Files: `addon/src/_locales/en/messages.json` (the bulk), `addon/src/help/open-in-container.html` (three
+English fallback paragraphs, ids `helpPageOpenInContainer*` — keep them identical to the locale text),
+`addon/scripts/test-checklist.html` (setup text and a few `TESTS` entries still say "group" for
+workspaces; native ones stay "tab group"), `README.md` (upstream-inherited feature bullets under the fork
+banner; the banner and migration steps already say workspaces and name "Simple Tab Groups" as a product),
+`docs/PRIVACY.md` (6 mentions), `docs/AMO-LISTING.md` (already workspace-first; check the "One group open
+at a time" block reads "tab group" and the summary stays ≤ 250 characters). Manifest needs nothing: name,
+description and every `commands` description are `__MSG_` references.
+
+**Budget:** 6 files touched (+ this spec); read first: `addon/src/_locales/en/messages.json` (only the
+`message` values — skip `description`), `addon/src/help/open-in-container.html`, the 0.7 section above for
+the phase 4 precedent. No JS is read or changed.
+
+**Gate:** `cd addon && npm run build` green (webpack fails on invalid JSON, which is the check that
+matters), `npx eslint addon/src` no new errors, `cd addon && npm run test:firefox:smoke` passes. Then this
+listing must come back with only the allowed kinds (native "tab group", product names, "ungrouped"):
+`grep -n -i '"message".*group' addon/src/_locales/en/messages.json` — paste the surviving lines into the
+Status line's commit note so review can check the judgement calls.
+
+**Verification:** `cd addon && npm run test:firefox`; open the toolbar popup, Options (every tab), the
+manage page and a tab's context menu. Nothing says bare "group" or "tab groups" for a workspace; the two
+native-group options say "tab group"; a new workspace is titled "Workspace N"; `about:addons` shows the new
+one-liner.
+
+**Risks / unknowns:**
+
+- *Ambiguous sentences.* Strings such as "Open group after changing to it", "Tab "$tabtitle$" was moved to
+  group "$grouptitle$"" and the backup texts all mean the STG group → workspace. The only strings that mean
+  native groups are the two options and anything mentioning collapse / expand / header. When unsure, the
+  key name decides: `*SubGroup*` / `*Native*` keys are native, everything else is a workspace.
+- *Placeholders and nested messages.* Keep `$name$` placeholders, `__MSG_x__` references and `\n` layout
+  intact; the 0.7 precedent shows how `__MSG_manageGroupsTitle__` is reused inside other strings — the key
+  stays, only its text changes to "Manage workspaces".
+- *Grammar drift.* "a group" → "a workspace" is safe; "groups'" possessives and "group's" need a reread.
+  Read every changed line once in place.
+- *Plural of the product.* "Simple Workspaces" (product) versus "workspaces" (the things) — do not
+  capitalise the common noun.
 
 ---
 
@@ -427,6 +574,23 @@ fails:
   programmatically collapsing groups.
 - Scope the collapse to the current window (native groups are window-scoped) and to the
   active workspace's groups only.
+
+**Activation rule (phase 7).** The bottom bar also has to *go away* the way it does in Vivaldi:
+selecting a tab on the top bar closes the open stack. So the rule is two-sided:
+
+- The group the user **explicitly opened** (header click, "add tabs to new group", a group
+  arriving from another window) stays open and every other expanded group collapses.
+- Otherwise the only group allowed to stay expanded is **the one holding the active tab**.
+  When the active tab becomes one that is in no expanded group — an ungrouped tab, a pinned
+  tab, or the active tab of a collapsed group, which Firefox draws on the top bar beside the
+  header — **every expanded group in that window collapses** (`tabs.onActivated` is the
+  trigger).
+- The fork still only ever *collapses*. Activating a tab inside a collapsed group does not
+  expand it (that is Firefox's own behavior too, behavior doc §5); the user opens it from the
+  header, which is an explicit expand.
+- Activations performed by the fork itself during a workspace switch or restore are parked
+  with the rest of the enforcement until the operation is idle and are decided once, so the
+  rule never fights the rebuild.
 
 This is the same click-to-replace interaction the user described; it lives in the fork so it
 works together with persistence (§4.2/§4.3) from one coherent codebase, with no separate
