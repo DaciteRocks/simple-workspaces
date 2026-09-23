@@ -6,7 +6,7 @@
 [![Mozilla Add-on](https://img.shields.io/amo/v/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/) [![downloads](https://img.shields.io/amo/dw/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/statistics/?last=365) [![users](https://img.shields.io/amo/users/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/statistics/usage/?last=365) [![rating](https://img.shields.io/amo/rating/simple-tab-groups.svg)](https://addons.mozilla.org/firefox/addon/simple-tab-groups/reviews/)
 
 > **Simple Workspaces is a fork of Simple Tab Groups**, not the upstream add-on. The links and badges
-> directly above point at upstream. It adds a Vivaldi-style *single-active* rule for Firefox native tab groups (open one group and the previously
+> directly above point at upstream. It adds a Vivaldi-style *single-active* rule for Firefox native tab groups (open one tab group and the previously
 > open one collapses) on top of upstream's native-group persistence, and ships as a separately signed
 > add-on (`simple-workspaces@dacite.dev`). Design, status and phases:
 > [`docs/VIVALDI-PARITY-FORK.md`](docs/VIVALDI-PARITY-FORK.md). Companion tab-bar stylesheet:
@@ -15,7 +15,7 @@
 > **Migrating from upstream STG:** the fork has its own add-on id, so it starts with empty storage.
 > 1. In upstream STG open Options → "Backup your Simple Tab Groups" → **Create backup**.
 > 2. **Disable or remove upstream STG** in `about:addons`. Both add-ons hide and show the same tabs
->    and manage the same native groups; running them side by side corrupts both.
+>    and manage the same native tab groups; running them side by side corrupts both.
 > 3. Install the fork, open its Options → **Restore backup**, and pick the file from step 1.
 >
 > What does not carry over: STG plugins (group notes, etc.) and the Windows backup host (STGHost)
@@ -67,7 +67,7 @@ Zip file is located in `dist-zip` folder.
 
 ## Description
 
-Simple Tab Groups works across browser instances/windows too. If you select a group in another window, the selected window will jump to the foreground with the chosen group selected. You can even select the specific tab within that group in background browser windows. [GIF example](https://user-images.githubusercontent.com/7843031/33828871-806ccf6e-de76-11e7-9a0e-1ddfb97e878d.gif)
+Simple Tab Groups works across browser instances/windows too. If you select a workspace in another window, the selected window will jump to the foreground with the chosen workspace selected. You can even select the specific tab within that workspace in background browser windows. [GIF example](https://user-images.githubusercontent.com/7843031/33828871-806ccf6e-de76-11e7-9a0e-1ddfb97e878d.gif)
 
 This allows for easy switching between active and pre-loaded tabs across multiple browser windows.
 
@@ -82,7 +82,7 @@ This allows for easy switching between active and pre-loaded tabs across multipl
 * [Open Manage groups](https://addons.mozilla.org/firefox/addon/stg-plugin-manage-groups/)
 
 Allow support message actions from Gesturify addon.
-Allow import groups from addons "Panorama View" and "Sync Tab Groups".
+Allow import workspaces from addons "Panorama View" and "Sync Tab Groups".
 
 ### Work with [Gesturefy](https://addons.mozilla.org/firefox/addon/gesturefy/) addon
 
@@ -133,22 +133,22 @@ Open popup shortcut: `F8`. [You can change this hotkey](https://support.mozilla.
 Current list of functionality / development notes:
 
 * Design like old add-on "Tab Groups"
-* Added colored group icon
-* Added the ability to import the backup groups of the old plug-in "Tab Groups"
+* Added colored workspace icon
+* Added the ability to import the backups of the old plug-in "Tab Groups"
 * Added support of "Firefox Multi-Account Containers"
 * Now fully supports multiple windows
-* Saves last active tab after change group
-* Show currently used group in addon icon (see screenshot)
+* Saves last active tab after change workspace
+* Show currently used workspace in addon icon (see screenshot)
 * Specially NOT supported Private (Incognito) Mode
 * Added close tab by middle mouse click
-* Added simple switching between groups and tabs in search mode using the up, down, right and left keys
-* "Manage groups" functional is here! (so far only "Grid")
-* Added support Drag&Drop for tabs and groups in popup window
-* Added support sorting groups (context menu in popup window)
-* Added field for search/filter tabs in "Manage Groups"
-* Added support to Backup/Restore tabs, groups and settings to/from json file
-* Custom group icons, set group icon from tab icon (by context menu)
-* Added undo remove group by context menu browser button (see in screenshots)
+* Added simple switching between workspaces and tabs in search mode using the up, down, right and left keys
+* "Manage workspaces" functional is here! (so far only "Grid")
+* Added support Drag&Drop for tabs and workspaces in popup window
+* Added support sorting workspaces (context menu in popup window)
+* Added field for search/filter tabs in "Manage workspaces"
+* Added support to Backup/Restore tabs, workspaces and settings to/from json file
+* Custom workspace icons, set workspace icon from tab icon (by context menu)
+* Added undo remove workspace by context menu browser button (see in screenshots)
 * Added support for catch tabs by containers (#76)
 * Added dark theme
 * Added support SideBar
@@ -158,15 +158,15 @@ Permissions used:
 * **tabs**: for tab handling
 * **tabHide**: for hide tabs
 * **contextualIdentities & cookies**: for work with Firefox Multi-Account Containers
-* **notifications**: for notification on move tab to group etc.
+* **notifications**: for notification on move tab to workspace etc.
 * **menus**: for creating tabs context menus
-* **sessions**: for save session data (last used group, etc)
+* **sessions**: for save session data (last used workspace, etc)
 * **downloads**: for create auto backups
 * **management**: for automatically detect the required addons
-* **storage**: for saving groups localy
+* **storage**: for saving workspaces localy
 * **unlimitedStorage**: restore tabs after close window, there can be a lot of tabs
-* **<all_urls>(Access your data for all websites)**: for tab thumbnails and catch/move/reopen tabs in needed containers/groups
-* **webRequest** & **webRequestBlocking**: for catch/move/reopen tabs in needed containers/groups</li>
+* **<all_urls>(Access your data for all websites)**: for tab thumbnails and catch/move/reopen tabs in needed containers/workspaces
+* **webRequest** & **webRequestBlocking**: for catch/move/reopen tabs in needed containers/workspaces</li>
 * **(optional) bookmarks**: access for create bookmarks
 * **(optional) nativeMessaging**: Used for [STGHost](host) to create backups in any folder (Windows only)
 

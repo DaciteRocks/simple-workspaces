@@ -8,7 +8,7 @@
         "description": "STG Host name"
     },
     "extensionDescription": {
-        "message": "Create, modify and quickly change tab groups",
+        "message": "Create, modify and quickly change workspaces",
         "description": "Description of the extension."
     },
     "openSettings": {
@@ -20,19 +20,19 @@
         "description": "Settings menu title"
     },
     "manageGroupsTitle": {
-        "message": "Manage groups",
+        "message": "Manage workspaces",
         "description": "Manage groups"
     },
     "setTabIconAsGroupIcon": {
-        "message": "Set tab icon as group icon",
+        "message": "Set tab icon as workspace icon",
         "description": "Set tab icon as group icon"
     },
     "moveTabToGroupTitle": {
-        "message": "Move tab to group",
+        "message": "Move tab to workspace",
         "description": "Move tab to group title"
     },
     "moveTabToGroupMessage": {
-        "message": "Tab \"$tabtitle$\" was moved to group \"$grouptitle$\".\n\nClick here to show this tab.",
+        "message": "Tab \"$tabtitle$\" was moved to workspace \"$grouptitle$\".\n\nClick here to show this tab.",
         "description": "Tab moved popup title",
         "placeholders": {
             "grouptitle": {
@@ -100,7 +100,7 @@
         "description": "Free arrange"
     },
     "closePopupAfterChangeGroup": {
-        "message": "Close popup after changing group",
+        "message": "Close popup after changing workspace",
         "description": "Close popup after changing group"
     },
     "closePopupAfterSelectTab": {
@@ -112,11 +112,11 @@
         "description": "Open \"Manage Groups\" in new tab"
     },
     "showConfirmDialogBeforeGroupDelete": {
-        "message": "Show confirmation dialog before deleting the group",
+        "message": "Show confirmation dialog before deleting the workspace",
         "description": "Show confirmation dialog before deleting the group"
     },
     "showConfirmDialogBeforeGroupArchiving": {
-        "message": "Show confirmation dialog before archiving the group",
+        "message": "Show confirmation dialog before archiving the workspace",
         "description": "Show confirmation dialog before archiving the group"
     },
     "exportAddonSettingsTitle": {
@@ -124,7 +124,7 @@
         "description": "Backup your Simple Tab Groups"
     },
     "exportAddonSettingsDescription": {
-        "message": "Export your tab groups into a backup file for safe-keeping, so that you can restore them at a later time if necessary.",
+        "message": "Export your workspaces into a backup file for safe-keeping, so that you can restore them at a later time if necessary.",
         "description": "Export your tab groups into a backup file for safe-keeping, so that you can restore them at a later time if necessary."
     },
     "exportAddonSettingsButton": {
@@ -140,7 +140,7 @@
         "description": "Restore Simple Tab Groups"
     },
     "importAddonSettingsDescription": {
-        "message": "Load a backup file containing the tab groups you want to restore.",
+        "message": "Load a backup file containing the workspaces you want to restore.",
         "description": "Load a backup file containing the tab groups you want to restore."
     },
     "restoreBackup": {
@@ -164,11 +164,11 @@
         "description": "Load a backup file old \"Tab Groups\" addon."
     },
     "openGroupAfterChange": {
-        "message": "Open group after changing to it",
+        "message": "Open workspace after changing to it",
         "description": "Open group after changing to it"
     },
     "newGroupTitle": {
-        "message": "Group $id$",
+        "message": "Workspace $id$",
         "description": "group id",
         "placeholders": {
             "id": {
@@ -188,11 +188,11 @@
         }
     },
     "sortGroupsAZ": {
-        "message": "Sort groups [A-Z]",
+        "message": "Sort workspaces [A-Z]",
         "description": "Sort groups [A-Z]"
     },
     "sortGroupsZA": {
-        "message": "Sort groups [Z-A]",
+        "message": "Sort workspaces [Z-A]",
         "description": "Sort groups [Z-A]"
     },
     "generalTitle": {
@@ -200,15 +200,15 @@
         "description": "General"
     },
     "groupSettings": {
-        "message": "Group settings",
+        "message": "Workspace settings",
         "description": "Group settings"
     },
     "deleteGroup": {
-        "message": "Delete group",
+        "message": "Delete workspace",
         "description": "Delete group"
     },
     "confirmDeleteGroup": {
-        "message": "Do you want to delete group \"$grouptitle$\"?\nRemoving groups also closes tabs and windows if they are open!",
+        "message": "Do you want to delete workspace \"$grouptitle$\"?\nRemoving workspaces also closes tabs and windows if they are open!",
         "description": "Delete group?",
         "placeholders": {
             "grouptitle": {
@@ -250,7 +250,7 @@
         "description": "Open new tab"
     },
     "createNewGroup": {
-        "message": "Create new group",
+        "message": "Create new workspace",
         "description": "Create new group"
     },
     "goBackButtonTitle": {
@@ -258,7 +258,7 @@
         "description": "Go back"
     },
     "goBackToGroupsButtonTitle": {
-        "message": "Go back to groups",
+        "message": "Go back to workspaces",
         "description": "Go back to groups"
     },
     "title": {
@@ -274,7 +274,7 @@
         "description": "Load icon"
     },
     "selectUserGroupIconWarnText": {
-        "message": "Sorry, you can't load a custom icon in this popup, but you can load a custom group icon in \"__MSG_manageGroupsTitle__\".\nOpen \"__MSG_manageGroupsTitle__\"?",
+        "message": "Sorry, you can't load a custom icon in this popup, but you can load a custom workspace icon in \"__MSG_manageGroupsTitle__\".\nOpen \"__MSG_manageGroupsTitle__\"?",
         "description": "Sorry, you can't load custom icon in this popup, but you can load custom group icon in \"Manage groups\".\nOpen \"Manage groups\"?"
     },
     "setRandomColor": {
@@ -294,7 +294,7 @@
         "description": "Regular expressions"
     },
     "regexpForTabsHelp": {
-        "message": "Insert regular expressions for web addresses here. Matching tabs will be automatically moved to this group.\nUse one line per rule, there can be as many as you want.\nExamples:\ngithub\\.com/drive4ik/simple-tab-groups - catch all pages in the add-on's repository\nbugzilla\\.mozilla\\.org - catch Firefox bug reports\n(facebook|twitter|youtube)\\.com - catch all your social pages",
+        "message": "Insert regular expressions for web addresses here. Matching tabs will be automatically moved to this workspace.\nUse one line per rule, there can be as many as you want.\nExamples:\ngithub\\.com/drive4ik/simple-tab-groups - catch all pages in the add-on's repository\nbugzilla\\.mozilla\\.org - catch Firefox bug reports\n(facebook|twitter|youtube)\\.com - catch all your social pages",
         "description": "Regular exceptions helper"
     },
     "hotkeysTitle": {
@@ -322,63 +322,63 @@
         "description": "Select action"
     },
     "selectGroup": {
-        "message": "Select group",
+        "message": "Select workspace",
         "description": "Select group"
     },
     "unknownGroup": {
-        "message": "Unknown group",
+        "message": "Unknown workspace",
         "description": "Unknown group"
     },
     "hotkeyActionTitleLoadNextGroup": {
-        "message": "Load next group",
+        "message": "Load next workspace",
         "description": "Load next group"
     },
     "hotkeyActionTitleLoadPrevGroup": {
-        "message": "Load previous group",
+        "message": "Load previous workspace",
         "description": "Load previous group"
     },
     "hotkeyActionTitleLoadNextUnloadedGroup": {
-        "message": "Load next unloaded group",
+        "message": "Load next unloaded workspace",
         "description": "Load next unloaded group"
     },
     "hotkeyActionTitleLoadPrevUnloadedGroup": {
-        "message": "Load previous unloaded group",
+        "message": "Load previous unloaded workspace",
         "description": "Load previous unloaded group"
     },
     "hotkeyActionTitleLoadNextNonEmptyGroup": {
-        "message": "Load next non-empty group",
+        "message": "Load next non-empty workspace",
         "description": "Load next non-empty group"
     },
     "hotkeyActionTitleLoadPrevNonEmptyGroup": {
-        "message": "Load previous non-empty group",
+        "message": "Load previous non-empty workspace",
         "description": "Load previous non-empty group"
     },
     "hotkeyActionTitleLoadHistoryNextGroup": {
-        "message": "Load next group from history",
+        "message": "Load next workspace from history",
         "description": "Load next group from history"
     },
     "hotkeyActionTitleLoadHistoryPrevGroup": {
-        "message": "Load previous group from history",
+        "message": "Load previous workspace from history",
         "description": "Load previous group from history"
     },
     "hotkeyActionTitleLoadFirstGroup": {
-        "message": "Load first group",
+        "message": "Load first workspace",
         "description": "Load first group"
     },
     "hotkeyActionTitleLoadLastGroup": {
-        "message": "Load last group",
+        "message": "Load last workspace",
         "description": "Load last group"
     },
     "hotkeyActionTitleLoadCustomGroup": {
-        "message": "Load custom group",
+        "message": "Load custom workspace",
         "description": "Load custom group"
     },
     "hotkeyActionTitleAddNewGroup": {
-        "message": "Add new group",
+        "message": "Add new workspace",
         "description": "Add new group"
     },
     "hotkeyActionTitleDeleteCurrentGroup": {
-        "message": "Delete current group",
+        "message": "Delete current workspace",
         "description": "Delete current group"
     },
     "hotkeyActionTitleOpenManageGroups": {
@@ -386,19 +386,19 @@
         "description": "Open manage groups"
     },
     "hotkeyActionTitleMoveSelectedTabsToCustomGroup": {
-        "message": "Move selected tabs to custom group",
+        "message": "Move selected tabs to custom workspace",
         "description": "Move selected tabs to custom group"
     },
     "hotkeyActionTitleDiscardGroup": {
-        "message": "Discard group",
+        "message": "Discard workspace",
         "description": "Hotkey action Discard group"
     },
     "hotkeyActionTitleDiscardOtherGroups": {
-        "message": "Discard other groups",
+        "message": "Discard other workspaces",
         "description": "Hotkey action Discard other groups"
     },
     "hotkeyActionTitleReloadAllTabsInCurrentGroup": {
-        "message": "Reload all tabs in current group",
+        "message": "Reload all tabs in current workspace",
         "description": "Reload all tabs in current group"
     },
     "hotkeyActionTitleStartCloudSync": {
@@ -414,7 +414,7 @@
         "description": "Save last error logs into JSON file"
     },
     "undoRemoveGroupItemTitle": {
-        "message": "Undelete a group \"$grouptitle$\"",
+        "message": "Undelete a workspace \"$grouptitle$\"",
         "description": "Undelete a group menu title",
         "placeholders": {
             "grouptitle": {
@@ -424,7 +424,7 @@
         }
     },
     "undoRemoveGroupNotification": {
-        "message": "Click here to cancel the deletion of the group \"$grouptitle$\"",
+        "message": "Click here to cancel the deletion of the workspace \"$grouptitle$\"",
         "description": "Click here to cancel the deletion of the group title",
         "placeholders": {
             "grouptitle": {
@@ -434,11 +434,11 @@
         }
     },
     "isStickyGroupTitle": {
-        "message": "Sticky group",
+        "message": "Sticky workspace",
         "description": "Sticky group"
     },
     "isStickyGroupHelp": {
-        "message": "Tabs in this group will never be automatically moved to another group",
+        "message": "Tabs in this workspace will never be automatically moved to another workspace",
         "description": "Tabs in this group will never be automatically moved to another group"
     },
     "iconStyle": {
@@ -446,7 +446,7 @@
         "description": "Icon style"
     },
     "discardTabsAfterHide": {
-        "message": "Unload tabs from memory after closing a group",
+        "message": "Unload tabs from memory after closing a workspace",
         "description": "Unload tabs from memory after closing a group"
     },
     "discardExcludeAudioTabs": {
@@ -464,11 +464,11 @@
         }
     },
     "actionHiddenUnSyncTabsMoveAllTabsToCurrentGroup": {
-        "message": "Move all of these tabs into current group",
+        "message": "Move all of these tabs into current workspace",
         "description": "Move all of these tabs into current group"
     },
     "actionHiddenUnSyncTabsCreateGroup": {
-        "message": "Create new group with all of these tabs",
+        "message": "Create new workspace with all of these tabs",
         "description": "Create new group with all of these tabs"
     },
     "actionHiddenUnSyncTabsCloseAll": {
@@ -484,19 +484,19 @@
         "description": "Error: not found any normal not private/incognito/popup windows.\nAddon stopped working. Please, restart browser."
     },
     "ffFailedAndLostDataMessage": {
-        "message": "FF failed and all the groups were lost.\nIf you have a backup, you can restore data from it",
+        "message": "FF failed and all the workspaces were lost.\nIf you have a backup, you can restore data from it",
         "description": "FF failed and all the groups were lost.\nIf you have a backup, you can restore data from it"
     },
     "openGroupInNewWindow": {
-        "message": "Open group in new window",
+        "message": "Open workspace in new window",
         "description": "Open group in new window"
     },
     "muteTabsWhenGroupCloseAndRestoreWhenOpen": {
-        "message": "Mute tabs when group close and restore when open",
+        "message": "Mute tabs when workspace close and restore when open",
         "description": "Mute tabs when group close and restore when open"
     },
     "autoMoveIntoGroupTitle": {
-        "message": "Automatically move tabs into this group",
+        "message": "Automatically move tabs into this workspace",
         "description": "Automatically move tabs into this group"
     },
     "afterAutoMoveShowTab": {
@@ -520,7 +520,7 @@
         "description": "Include tab fav-icons in backup (makes backup file size bigger)"
     },
     "groupRemovedByExtension": {
-        "message": "Group \"$group$\" removed by extension: $extension$",
+        "message": "Workspace \"$group$\" removed by extension: $extension$",
         "description": "Group \"$group$\" removed by extension: $extension$",
         "placeholders": {
             "group": {
@@ -638,15 +638,15 @@
         "description": "Open backup folder"
     },
     "createNewGroupWhenOpenNewWindow": {
-        "message": "Create a new group when opening a new window",
+        "message": "Create a new workspace when opening a new window",
         "description": "Create a new group when opening a new window"
     },
     "cloneSubGroupsWhenMovingTabs": {
-        "message": "Keep (clone) the native tab group of tabs moved to another group",
+        "message": "Keep (clone) the native tab group of tabs moved to another workspace",
         "description": "Keep (clone) the native tab group of tabs moved to another group"
     },
     "cloneSubGroupsWhenMovingTabsHelp": {
-        "message": "Applies when tabs are moved to another group by the add-on. A native tab group moved whole always survives the move. This option decides a partial move: off — as in the browser, the moved tabs leave their native group; on — the native group is cloned into the target group along with them.",
+        "message": "Applies when tabs are moved to another workspace by the add-on. A native tab group moved whole always survives the move. This option decides a partial move: off — as in the browser, the moved tabs leave their native tab group; on — the native tab group is cloned into the target workspace along with them.",
         "description": "Applies when tabs are moved to another group by the add-on. A native tab group moved whole always survives the move. This option decides a partial move: off — as in the browser, the moved tabs leave their native group; on — the native group is cloned into the target group along with them."
     },
     "singleExpandedNativeGroup": {
@@ -654,11 +654,11 @@
         "description": "Keep only one native tab group expanded at a time (Vivaldi-style)"
     },
     "singleExpandedNativeGroupHelp": {
-        "message": "When you expand a native tab group, every other expanded group in the same window is collapsed automatically, so exactly one group's tabs are shown at a time. The same rule is applied after a group is loaded into a window or restored on startup.",
+        "message": "When you expand a native tab group, every other expanded tab group in the same window is collapsed automatically, so exactly one tab group's tabs are shown at a time. The same rule is applied after a workspace is loaded into a window or restored on startup.",
         "description": "When you expand a native tab group, every other expanded group in the same window is collapsed automatically, so exactly one group's tabs are shown at a time. The same rule is applied after a group is loaded into a window or restored on startup."
     },
     "prependTitleToWindow": {
-        "message": "Prepend group title to window title",
+        "message": "Prepend workspace title to window title",
         "description": "Prepend group title to window title"
     },
     "allowAccessToBookmarks": {
@@ -706,7 +706,7 @@
         "description": "Setting disabled by policy"
     },
     "openBookmarkInGroup": {
-        "message": "Open bookmark in group",
+        "message": "Open bookmark in workspace",
         "description": "Open bookmark in group"
     },
     "bookmarkNotAllowed": {
@@ -714,7 +714,7 @@
         "description": "This bookmark is not allowed"
     },
     "openLinkInGroupTitle": {
-        "message": "Open link in group",
+        "message": "Open link in workspace",
         "description": "Open link in group title"
     },
     "showContextMenuOnTabs": {
@@ -726,7 +726,7 @@
         "description": "Show context menu on links"
     },
     "groupsCreatedCount": {
-        "message": "$groupscount$ groups created",
+        "message": "$groupscount$ workspaces created",
         "description": "Groups created count",
         "placeholders": {
             "groupscount": {
@@ -736,7 +736,7 @@
         }
     },
     "noGroupsCreated": {
-        "message": "No groups created",
+        "message": "No workspaces created",
         "description": "No groups created"
     },
     "noAccessToBookmarks": {
@@ -744,7 +744,7 @@
         "description": "You do not have access to bookmarks. Enable it on in addon settings"
     },
     "exportGroupToBookmarks": {
-        "message": "Export group to bookmarks",
+        "message": "Export workspace to bookmarks",
         "description": "Export group to bookmarks"
     },
     "defaultBookmarkFolderLocation": {
@@ -752,7 +752,7 @@
         "description": "Default bookmark folder location"
     },
     "groupExportedToBookmarks": {
-        "message": "Group '$grouptitle$' successfully exported to bookmarks",
+        "message": "Workspace '$grouptitle$' successfully exported to bookmarks",
         "description": "Group '$grouptitle$' successfully exported to bookmarks",
         "placeholders": {
             "grouptitle": {
@@ -762,19 +762,19 @@
         }
     },
     "groupWithoutTabs": {
-        "message": "This group has no tabs",
+        "message": "This workspace has no tabs",
         "description": "This group has no tabs"
     },
     "tabsWithoutGroups": {
-        "message": "Tabs without groups",
+        "message": "Tabs without workspaces",
         "description": "Tabs without groups"
     },
     "exportAllGroupsToBookmarks": {
-        "message": "Export all groups to bookmarks",
+        "message": "Export all workspaces to bookmarks",
         "description": "Export all groups to bookmarks"
     },
     "allGroupsExportedToBookmarks": {
-        "message": "All groups successfully exported to bookmarks",
+        "message": "All workspaces successfully exported to bookmarks",
         "description": "All groups successfully exported to bookmarks"
     },
     "discardTabTitle": {
@@ -798,7 +798,7 @@
         "description": "Show other tabs"
     },
     "showNotificationAfterGroupDelete": {
-        "message": "Show notification after group delete",
+        "message": "Show notification after workspace delete",
         "description": "Show notification after group delete"
     },
     "reloadTab": {
@@ -810,11 +810,11 @@
         "description": "This tab is not supported"
     },
     "showExtendGroupsPopupWithActiveTabs": {
-        "message": "Show active tabs in groups popup",
+        "message": "Show active tabs in workspaces popup",
         "description": "Show active tabs in groups popup"
     },
     "reloadAllTabsInGroup": {
-        "message": "Reload all tabs in group",
+        "message": "Reload all tabs in workspace",
         "description": "Reload all tabs in group"
     },
     "tabsCreatedCount": {
@@ -868,7 +868,7 @@
         "description": "Import addon settings"
     },
     "importGroups": {
-        "message": "Import groups",
+        "message": "Import workspaces",
         "description": "Import groups"
     },
     "pinnedTabs": {
@@ -876,7 +876,7 @@
         "description": "Pinned tabs"
     },
     "eraseAddonSettingsWarningTitle": {
-        "message": "**__MSG_warning__** This action will __FULL ERASE__ all existing settings and groups!\nTabs will not be affected.",
+        "message": "**__MSG_warning__** This action will __FULL ERASE__ all existing settings and workspaces!\nTabs will not be affected.",
         "description": "Warning! This action will <u>FULL ERASE</u> all existing settings and groups!\nTabs will not be affected."
     },
     "clear": {
@@ -904,7 +904,7 @@
         "description": "Welcome to Simple Tab Groups"
     },
     "helpPageWelcomeDescription": {
-        "message": "Please enable \"**Open previous windows and tabs**\" in browser settings.\nThis is necessary to maintain communication between the group and the tab, otherwise the tabs will not open when the browser starts and will be lost from the addon - the addon will stop working.",
+        "message": "Please enable \"**Open previous windows and tabs**\" in browser settings.\nThis is necessary to maintain communication between the workspace and the tab, otherwise the tabs will not open when the browser starts and will be lost from the addon - the addon will stop working.",
         "description": "Please enable \"Open previous windows and tabs\" in browser settings.\nThis is necessary to maintain communication between the group and the tab, otherwise the tabs will not open when the browser starts and will be lost from the addon - the addon will stop working."
     },
     "enableDebugTitle": {
@@ -932,7 +932,7 @@
         "description": "Archive"
     },
     "confirmArchiveGroup": {
-        "message": "Do you want to archive the group \"$grouptitle$\"?\nWhen you archive a group, the tabs will be saved in the add-on database and will be removed from the browser.",
+        "message": "Do you want to archive the workspace \"$grouptitle$\"?\nWhen you archive a workspace, the tabs will be saved in the add-on database and will be removed from the browser.",
         "description": "Do you want to archive the group",
         "placeholders": {
             "grouptitle": {
@@ -946,7 +946,7 @@
         "description": "Unarchive"
     },
     "groupIsArchived": {
-        "message": "Unable to complete the action, the group \"$grouptitle$\" is in the archive",
+        "message": "Unable to complete the action, the workspace \"$grouptitle$\" is in the archive",
         "description": "Unable to complete the action, the group is in the archive",
         "placeholders": {
             "grouptitle": {
@@ -960,15 +960,15 @@
         "description": "Please, update addon to latest version"
     },
     "hotkeyActionTitleRenameGroup": {
-        "message": "Rename group",
+        "message": "Rename workspace",
         "description": "Rename group"
     },
     "noGroupsAvailable": {
-        "message": "You have no groups",
+        "message": "You have no workspaces",
         "description": "You have no groups"
     },
     "alwaysAskNewGroupName": {
-        "message": "Always ask for a new group name",
+        "message": "Always ask for a new workspace name",
         "description": "Always ask for a new group name"
     },
     "impossibleToAskUserAboutAction": {
@@ -1012,7 +1012,7 @@
         "description": "addon can't open URL:"
     },
     "helpPageOpenInContainerDesc1": {
-        "message": "Group **$groupTitle$** was assigned to open tabs in <container-name>$containerName$</container-name> container.",
+        "message": "Workspace **$groupTitle$** was assigned to open tabs in <container-name>$containerName$</container-name> container.",
         "description": "Group 'Group 1' was assigned to open tabs in Personal container.",
         "placeholders": {
             "groupTitle": {
@@ -1030,7 +1030,7 @@
         "description": "Another addon:"
     },
     "helpPageOpenInContainerDesc3": {
-        "message": "tries to open this URL in <container-name>$containerName$</container-name> container. Move the tab to another group or forbid the addon **$addonName$** to perform this action.",
+        "message": "tries to open this URL in <container-name>$containerName$</container-name> container. Move the tab to another workspace or forbid the addon **$addonName$** to perform this action.",
         "description": "tries to open this URL in Business container. Move the tab to another group or forbid the addon 'Facebook Container' to perform this action.",
         "placeholders": {
             "containerName": {
@@ -1054,15 +1054,15 @@
         }
     },
     "groupNotLoaded": {
-        "message": "Group not loaded",
+        "message": "Workspace not loaded",
         "description": "Group not loaded"
     },
     "groupNotFound": {
-        "message": "Group not found",
+        "message": "Workspace not found",
         "description": "Group not found"
     },
     "unloadGroup": {
-        "message": "Unload the group",
+        "message": "Unload the workspace",
         "description": "Unload the group"
     },
     "tabsInThisWindowWereHidden": {
@@ -1070,7 +1070,7 @@
         "description": "Tabs in this window were hidden. You can find them at the bottom of the popup window of the addon."
     },
     "searchOrGoToActive": {
-        "message": "Search or right arrow to focus on active tab/group",
+        "message": "Search or right arrow to focus on active tab/workspace",
         "description": "Search or right arrow to focus on active tab/group"
     },
     "noContainerTitle": {
@@ -1090,7 +1090,7 @@
         "description": "excluding these containers"
     },
     "helpPageOpenInContainerExcludeContainerToGroup": {
-        "message": "Exclude <container-name>$containerName$</container-name> container for group **$groupTitle$**",
+        "message": "Exclude <container-name>$containerName$</container-name> container for workspace **$groupTitle$**",
         "description": "Exclude Personal container for group Group 1",
         "placeholders": {
             "containerName": {
@@ -1122,11 +1122,11 @@
         "description": "Unmute tab"
     },
     "muteGroup": {
-        "message": "Mute group",
+        "message": "Mute workspace",
         "description": "Mute group"
     },
     "unMuteGroup": {
-        "message": "Unmute group",
+        "message": "Unmute workspace",
         "description": "Unmute group"
     },
     "fullPopupWidth": {
@@ -1134,7 +1134,7 @@
         "description": "Use full popup width"
     },
     "showArchivedGroups": {
-        "message": "Show archived groups",
+        "message": "Show archived workspaces",
         "description": "Show archived groups"
     },
     "helpPageDbErrorReinstallTitle": {
@@ -1178,7 +1178,7 @@
         "description": "Erase and restore backup"
     },
     "searchOnlyGroups": {
-        "message": "Only groups",
+        "message": "Only workspaces",
         "description": "Only groups"
     },
     "backupLocation": {
@@ -1250,7 +1250,7 @@
         "description": "Required actions"
     },
     "stgHostHowToUse": {
-        "message": "To select any folder on your computer to save tab group backups, you need the **__MSG_stgHostName__** program.\n\nHow to set it up:\n1. Download the <a download>__STGHost.exe__</a> program to any folder on your computer\n2. Run the program and set the path for saving backups\n3. If necessary, change other parameters in the program settings\n<p warn>**__MSG_warning__** If you have moved the program to another folder, you need to run it once so that Firefox recognizes the new location.</p>\nAfter configuration, the program will automatically run in the background and accept commands from the extension and this message will disappear.",
+        "message": "To select any folder on your computer to save workspace backups, you need the **__MSG_stgHostName__** program.\n\nHow to set it up:\n1. Download the <a download>__STGHost.exe__</a> program to any folder on your computer\n2. Run the program and set the path for saving backups\n3. If necessary, change other parameters in the program settings\n<p warn>**__MSG_warning__** If you have moved the program to another folder, you need to run it once so that Firefox recognizes the new location.</p>\nAfter configuration, the program will automatically run in the background and accept commands from the extension and this message will disappear.",
         "description": "How to install and use the STGHost program"
     },
     "hostAppNotFound": {
@@ -1278,7 +1278,7 @@
         "description": "Simple Tab Groups addon conflicts with the following enabled extensions:"
     },
     "helpPageExtensionsThatConflictWithStgDesc2": {
-        "message": "To avoid losing tabs or their location in windows and groups, it is strongly recommended to turn off or remove enabled extensions that conflict with the __MSG_extensionName__ addon.\nYou can do this on the addons settings page \"about:addons\" or by pressing the key combination `Ctrl+Shift+A`",
+        "message": "To avoid losing tabs or their location in windows and workspaces, it is strongly recommended to turn off or remove enabled extensions that conflict with the __MSG_extensionName__ addon.\nYou can do this on the addons settings page \"about:addons\" or by pressing the key combination `Ctrl+Shift+A`",
         "description": "To avoid losing tabs or their location in windows and groups, it is strongly recommended to turn off or remove enabled extensions that conflict with the Simple Tab Groups addon. You can do this on the addons settings page about:addons or by pressing the key combination Ctrl+Shift+A"
     },
     "ignoreConflictedExtIgnore": {
@@ -1322,7 +1322,7 @@
         "description": "Tab"
     },
     "group": {
-        "message": "Group",
+        "message": "Workspace",
         "description": "Group"
     },
     "helpPageUnsupportedUrlTitle": {
@@ -1342,15 +1342,15 @@
         "description": "An error occurred in the addon"
     },
     "windowNotHaveGroup": {
-        "message": "This window does not have a loaded group",
+        "message": "This window does not have a loaded workspace",
         "description": "This window does not have a loaded group"
     },
     "defaultGroup": {
-        "message": "Default group",
+        "message": "Default workspace",
         "description": "Default group"
     },
     "moveToGroupIfNoneCatchTabRules": {
-        "message": "If none of the regular expressions match the tab, move it to the group",
+        "message": "If none of the regular expressions match the tab, move it to the workspace",
         "description": "If none of the regular expressions match the tab, move it to the group"
     },
     "dontMove": {
@@ -1388,7 +1388,7 @@
         "description": "Sync the group through the cloud. Unchecked: the group stays on this device only; the other devices keep their own copies"
     },
     "uploadToCloudTitle": {
-        "message": "Checked — the group syncs through the cloud as usual.\nUnchecked — the group stays on this device; its copies on the other devices become independent and no longer affect each other.\nChecked again — the settings of this group go to the cloud, and the tabs of all copies are merged together.",
+        "message": "Checked — the workspace syncs through the cloud as usual.\nUnchecked — the workspace stays on this device; its copies on the other devices become independent and no longer affect each other.\nChecked again — the settings of this workspace go to the cloud, and the tabs of all copies are merged together.",
         "description": "Help for the 'Upload to the cloud' group option: checked - usual sync; unchecked - the copies on the devices become independent; checked again - this group's settings go to the cloud, the tabs are merged"
     },
     "helpTitle": {
