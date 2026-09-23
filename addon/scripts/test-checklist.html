@@ -172,10 +172,28 @@ const TESTS = [
         expected: 'A keeps its other tabs. The new window has one ungrouped tab. Nothing collapses anywhere.',
     }, {
         title: 'Settings: untick "Keep only one native tab group expanded at a time", then open A and B',
-        expected: 'Both stay open. When you tick it again, one collapses right away, and the one with the selected tab stays open.',
+        expected: 'Both stay open. When you tick it again, both close right away, because the selected tab (the Settings page) is not in a tab group.',
     }, {
         title: 'Look around Settings and the toolbar popup',
         expected: 'The new icon shows in the toolbar. There is no cloud sync section, sync button or sync menu item. No error notifications appear.',
+    }, {
+        title: 'With A open and one of its tabs selected, click an ungrouped tab on the top row',
+        expected: 'A collapses and the bottom row goes away. The tab you clicked is selected.',
+    }, {
+        title: 'With A open, click a pinned tab',
+        expected: 'Same as the test above: A collapses. A pinned tab counts as the top row.',
+    }, {
+        title: 'With an ungrouped tab selected, open A from its header, then click any top-row tab',
+        expected: 'A opens and stays open even though the selected tab is outside it. When you click the top-row tab, A collapses.',
+    }, {
+        title: 'With A open, switch to a tab of collapsed B with Ctrl+Tab or the toolbar popup',
+        expected: 'A collapses. B stays collapsed, with its selected tab shown next to its header. Opening B from its header shows its tabs.',
+    }, {
+        title: 'With A open and one of its tabs selected, close that tab (A still has other tabs)',
+        expected: 'Note which tab Firefox selects next. If it is in A, A stays open. If it is an ungrouped tab, A collapses. Write down which one happened.',
+    }, {
+        title: 'In W1 select an ungrouped tab, then switch W1, then W2, then back to W1',
+        expected: 'W1 comes back with A and B both collapsed and the ungrouped tab selected. In W2 the same rule holds for C.',
     },
 ];
 
