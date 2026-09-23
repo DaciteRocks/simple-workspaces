@@ -37,7 +37,12 @@ import * as Operations from './operations.js';
 // - the mirror in groups-native.js records the resulting collapsed flags into the workspace
 //   metadata like any user collapse - the single-expanded layout is what gets persisted. With the
 //   activation rule "expanded" is a function of the active tab plus the last explicit expand, so a
-//   stored flag only ever decides a group the active tab does not decide; no extra storage is kept.
+//   stored flag only ever decides the active tab's OWN group (this module cannot expand it); every
+//   other stored-expanded group is collapsed on the next enforcement. No extra storage is kept.
+// - the last explicit expand is remembered per window, in memory only, until the next tab activation
+//   in that window or until that group collapses or goes away. So a state-based enforcement (a mirror
+//   apply, a reconcile, the option being switched on) does not undo an expand the user just made while
+//   the active tab sits on the top bar.
 // - native groups are window-scoped, so is everything here. Live ids never leave this module.
 // - this module is imported by every extension page through groups.js; only the background page
 //   calls addListeners(), so only the background ever touches the browser from here.
@@ -60,6 +65,23 @@ function onStorageChanged(changes) {
 
 // the last collapsed flag each live group reported
 const collapsedByLiveId = new Map; // liveId → boolean
+
+// the group the user explicitly opened last, per window; cleared by the next activation in that window
+const explicitKeepByWindow = new Map; // windowId → liveId
+
+function rememberExplicit(windowId, liveId) {
+    if (liveId !== null) {
+        explicitKeepByWindow.set(windowId, liveId);
+    }
+
+    return liveId;
+}
+
+function forgetExplicit(groupNative) {
+    if (explicitKeepByWindow.get(groupNative.windowId) === groupNative.id) {
+        explicitKeepByWindow.delete(groupNative.windowId);
+    }
+}
 
 function remember(groupNative) {
     collapsedByLiveId.set(groupNative.id, groupNative.collapsed);
@@ -84,7 +106,7 @@ function onCreated(groupNative) {
 
     if (!groupNative.collapsed) {
         // born expanded (§7) - the user just opened this one, unless it is the addon's own rebuild
-        scheduleEnforce(groupNative.windowId, userKeepId(groupNative));
+        scheduleEnforce(groupNative.windowId, rememberExplicit(groupNative.windowId, userKeepId(groupNative)));
     }
 }
 
@@ -93,13 +115,18 @@ function onUpdated(groupNative) {
 
     remember(groupNative);
 
-    if (wasCollapsed !== true || groupNative.collapsed) {
+    if (groupNative.collapsed) {
+        forgetExplicit(groupNative);
+        return;
+    }
+
+    if (wasCollapsed !== true) {
         return; // not a collapsed → expanded transition
     }
 
     logger.log(onUpdated, 'expanded:', groupNative.id, 'window:', groupNative.windowId);
 
-    scheduleEnforce(groupNative.windowId, groupNative.id);
+    scheduleEnforce(groupNative.windowId, rememberExplicit(groupNative.windowId, groupNative.id));
 }
 
 function onMoved(groupNative) {
@@ -108,7 +135,7 @@ function onMoved(groupNative) {
     if (!groupNative.collapsed) {
         // arrived expanded from another window (§16); a header drag inside the window is
         // collapsed while it moves (§14) and re-expands through onUpdated
-        scheduleEnforce(groupNative.windowId, userKeepId(groupNative));
+        scheduleEnforce(groupNative.windowId, rememberExplicit(groupNative.windowId, userKeepId(groupNative)));
     }
 }
 
@@ -121,19 +148,16 @@ function userKeepId(groupNative) {
 
 function onRemoved(groupNative) {
     collapsedByLiveId.delete(groupNative.id);
+    forgetExplicit(groupNative);
 }
 
 // a top-bar tab selected → the expanded group (if it does not hold that tab) collapses. No keep id:
-// the active tab decides. During an addon operation this is parked like any other request, so the
-// activations of a workspace rebuild are folded into one decision on idle
-async function onActivated({tabId}) {
-    const tab = await browser.tabs.get(tabId).catch(() => null);
-
-    if (!tab) {
-        return; // closed before we got here
-    }
-
-    scheduleEnforce(tab.windowId);
+// the active tab decides, and an earlier explicit expand in this window no longer counts. During an
+// addon operation this is parked like any other request, so the activations of a workspace rebuild are
+// folded into one decision on idle
+function onActivated({windowId}) {
+    explicitKeepByWindow.delete(windowId);
+    scheduleEnforce(windowId);
 }
 
 let unsubscribeIdle = null;
@@ -162,6 +186,7 @@ export function removeListeners() {
     unsubscribeIdle?.();
     unsubscribeIdle = null;
     pendingByWindow.clear();
+    explicitKeepByWindow.clear();
 }
 
 // methods
@@ -194,11 +219,14 @@ export function scheduleEnforce(windowId, keepLiveId = null) {
     enforceWindow(windowId, keepLiveId).catch(logger.onCatch(['enforceWindow failed', windowId], false));
 }
 
-// which expanded group survives: the one asked for (the user just expanded it), otherwise the one
-// holding the window's active tab, otherwise none (the active tab is on the top bar)
+// which expanded group survives: the one asked for (the user just expanded it), otherwise the one the
+// user last opened explicitly in this window since its last activation, otherwise the one holding the
+// window's active tab, otherwise none (the active tab is on the top bar)
 async function pickGroupToKeep(windowId, expandedGroups, keepLiveId) {
+    const findExpanded = liveId => expandedGroups.find(groupNative => groupNative.id === liveId);
+
     if (keepLiveId !== null) {
-        const asked = expandedGroups.find(groupNative => groupNative.id === keepLiveId);
+        const asked = findExpanded(keepLiveId);
 
         if (asked) {
             return asked;
@@ -207,8 +235,15 @@ async function pickGroupToKeep(windowId, expandedGroups, keepLiveId) {
 
     const [activeTab] = await browser.tabs.query({windowId, active: true}).catch(() => []);
 
+    // read after the await: an expand that landed while the query ran still wins
+    const explicit = findExpanded(explicitKeepByWindow.get(windowId));
+
+    if (explicit) {
+        return explicit;
+    }
+
     if (activeTab && activeTab.groupId !== TAB_GROUP_ID_NONE) {
-        const active = expandedGroups.find(groupNative => groupNative.id === activeTab.groupId);
+        const active = findExpanded(activeTab.groupId);
 
         if (active) {
             return active;

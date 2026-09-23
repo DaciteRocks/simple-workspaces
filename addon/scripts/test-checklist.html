@@ -172,7 +172,7 @@ const TESTS = [
         expected: 'A keeps its other tabs. The new window has one ungrouped tab. Nothing collapses anywhere.',
     }, {
         title: 'Settings: untick "Keep only one native tab group expanded at a time", then open A and B',
-        expected: 'Both stay open. When you tick it again, one collapses right away, and the one with the selected tab stays open.',
+        expected: 'Both stay open. When you tick it again, both close right away, because the selected tab (the Settings page) is not in a group.',
     }, {
         title: 'Look around Settings and the toolbar popup',
         expected: 'The new icon shows in the toolbar. There is no cloud sync section, sync button or sync menu item. No error notifications appear.',

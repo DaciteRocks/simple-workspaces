@@ -71,7 +71,7 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | 4 | Rename to **Simple Workspaces**: display name, add-on id `simple-workspaces@dacite.dev`, short name, homepage, GitHub repo `DaciteRocks/simple-workspaces` | done 2026-09-14 (see 0.7) |
 | 5 | Publishing prep for a **listed** AMO release: new icon, Gist sync disabled and no data collection, privacy policy, `build-for-amo` script and reviewer README, listing draft, repo default branch | done 2026-09-14 (see 0.8); not yet exercised in a live Firefox |
 | 6 | One-command local testing: `npm run test:firefox` (build, watch, Firefox with a separate test profile, userChrome.css, checklist page), `:smoke`, `:reset` | done 2026-09-14 (see 0.9); smoke test passes headless |
-| 7 | §4.4 activation rule: activating a tab that is in no native tab group collapses the expanded group(s) of that window, so the lower bar disappears; the state-based "which group survives" rule becomes "the active tab's group, else none" | planned (see 0.10) |
+| 7 | §4.4 activation rule: activating a tab that is in no native tab group collapses the expanded group(s) of that window, so the lower bar disappears; the state-based "which group survives" rule becomes "the active tab's group, else none" | done 2026-09-23 (see 0.10); manual rows 13–18 not yet run |
 | 8 | User-visible terminology: the add-on's own groups are called **workspaces** in all English UI text; Firefox native groups are always **tab groups**; identifiers, keys and file names untouched | planned (see 0.11) |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
@@ -88,7 +88,8 @@ Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-imp
 - **Action:** `tabGroups.update(id, {collapsed: true})` on every other expanded group of that window. The
   module only ever collapses, so it cannot feed itself. Collapsing the group holding the active tab is
   safe (§5: the active tab stays drawn outside the header).
-- **Which group survives:** the one the user opened; otherwise the one holding the active tab; otherwise
+- **Which group survives:** the one the user opened (remembered per window until the next tab activation
+  there); otherwise the one holding the active tab; otherwise
   none (phase 7 — it was "the first reported" until then, see 0.10). While an STG composite operation is running (`Operations.isBusy()`), the request
   is parked per window and runs on idle; an explicit "keep this one" is never overwritten by a later
   state-based request from the same operation.
@@ -164,7 +165,7 @@ browser's tab context menu; in W2 create group C (2 tabs).
 | 8 | Create a container tab inside A, switch W1 → W2 → W1 | the container tab is back inside A |
 | 9 | With B expanded and A collapsed, drag B's header to another position | B is still expanded after the drop and A stays collapsed (§14: the drag collapses then re-expands B; that re-expand keeps B). Dragging a *collapsed* header is not covered by §14 — note what happens |
 | 10 | Drag a single tab out of A into a new window | A survives in W1; the new window has one ungrouped tab (§16) and nothing is collapsed anywhere |
-| 11 | Options → untick "Keep only one native tab group expanded" → expand A and B | both stay expanded; re-tick → one collapses immediately |
+| 11 | Options → untick "Keep only one native tab group expanded" → expand A and B | both stay expanded; re-tick → both collapse immediately (since phase 7: the active tab is the Options page, on the top bar) |
 | 12 | `about:debugging` → Inspect the fork → console filter `GroupsNativeExclusive` | one `enforceWindow` line per collapse, none during rename |
 | 13 | A expanded with one of its tabs active; click an ungrouped tab on the top bar | A collapses; the bottom bar is gone; the clicked tab is active |
 | 14 | A expanded; click a pinned tab | same as 13 — a pinned tab counts as the top bar |
@@ -278,7 +279,7 @@ Goal from the user: testing locally should be as easy as possible, with everythi
 
 ### 0.10 Phase 7 — activation rule: a top-bar tab closes the lower bar
 
-**Status:** planned
+**Status:** done 2026-09-23
 
 **User feedback (verbatim):** "When I click on a tab that is in a tab group, it comes down a level. But
 when I click on a tab on the top bar I want the tabs on the lower level to disappear like it does in
@@ -294,8 +295,8 @@ expanded group changes nothing. An explicit expand (header click, "add tabs to n
 in from another window) still keeps that group even when the active tab is elsewhere — the user asked
 for it. What exists at the end:
 
-- `tabs.onActivated` handler: `tabs.get(tabId)` (catch a closed tab and return), then
-  `scheduleEnforce(windowId)` with no keep id. Subscribed through `Listeners` in `addListeners` /
+- `tabs.onActivated` handler: `scheduleEnforce(windowId)` with no keep id, using the event's own
+  `windowId` (review: the planned `tabs.get(tabId)` hop was unnecessary and opened a race). Subscribed through `Listeners` in `addListeners` /
   `removeListeners` like the `tabGroups` events (`import Listeners from './listeners.js?...&tabs.onActivated'`).
   No reference to `tabs.js` internals (`skip.tracking`, `skipTrackingWindows` are not exported).
 - `pickGroupToKeep` returns `null` when no explicit keep applies and the active tab's group is not among
@@ -314,7 +315,8 @@ for it. What exists at the end:
   outside the expanded group collapses it.
 - Persistence: enforced collapses are mirrored into `group.groupsNative[].collapsed` (0.4 caveat). Accepted
   as is — with this rule "expanded" is a function of the active tab plus the last explicit expand, so a
-  stored flag only ever decides a group the active tab does not decide. Document that in the module's
+  stored flag only ever decides the active tab's own group (a collapse-only module cannot expand it);
+  every other stored-expanded group is collapsed on the next enforcement. Document that in the module's
   header comment; no storage change.
 - Module header comment, §4.4 (already describes the rule below; check it matches what landed) and the
   0.4 "which group survives" line updated. Rows 13–18 below appended to the §0.6 table and to `TESTS` in
@@ -356,6 +358,23 @@ per top-bar click that collapsed something and none for clicks inside the expand
   one `tabGroups.query` and returns early once nothing is expanded. No debounce needed; add one only if
   the log shows repeated collapse calls.
 - *Other locales* fall back to English for the changed description string, as in phase 1.
+
+**What landed** (commits `28632315`, review fixes after it): the rule, the `tabs.onActivated` trigger,
+the options sentence, checklist rows 13–18. Gate: build (9 baseline warnings), eslint (1 pre-existing
+error), `test:firefox:smoke` pass.
+
+- **Review (local-code-review + code-review, merged):** 1 kept, 4 noted, all applied. Only
+  local-code-review kept that "else none" let a *state-based* enforcement (mirror apply, restore,
+  reconcile, the option switched on) collapse a group the user had just expanded while the active tab was
+  on the top bar, because the explicit keep lived only for the synchronous call. Fix: the module remembers
+  the last explicit expand per window in memory (set on the expand transition and on user arrivals via
+  `onCreated` / `onMoved`; cleared by the next activation in that window, when that group collapses, or
+  when it is removed), and `pickGroupToKeep` honours it after the active-tab query. Both reviewers found
+  the `tabs.get` hop in `onActivated` (the event carries `windowId`); only code-review named the race it
+  opened (an activation followed quickly by a header expand could undo the expand) — the event's
+  `windowId` plus the remembered expand close it. local-code-review noted the "stored flag" sentence was
+  backwards (fixed here and in the module). Only code-review noted that row 11 now expects both groups to
+  collapse on re-tick.
 
 ### 0.11 Phase 8 — "workspaces" in all English UI text
 
