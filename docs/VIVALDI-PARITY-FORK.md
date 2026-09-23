@@ -73,7 +73,7 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | 6 | One-command local testing: `npm run test:firefox` (build, watch, Firefox with a separate test profile, userChrome.css, checklist page), `:smoke`, `:reset` | done 2026-09-14 (see 0.9); smoke test passes headless |
 | 7 | §4.4 activation rule: activating a tab that is in no native tab group collapses the expanded group(s) of that window, so the lower bar disappears; the state-based "which group survives" rule becomes "the active tab's group, else none" | done 2026-09-23 (see 0.10); manual rows 13–18 not yet run |
 | 8 | User-visible terminology: the add-on's own groups are called **workspaces** in all English UI text; Firefox native groups are always **tab groups**; identifiers, keys and file names untouched | done 2026-09-23 (see 0.11); review clean from both reviewers |
-| 9 | Rename to **Strata Workspaces**: display name, add-on id `strata-workspaces@dacite.dev`, homepage, docs, scripts; GitHub repo `DaciteRocks/strata-workspaces` and the `origin` remote, renamed as the last step | planned (see 0.12) |
+| 9 | Rename to **Strata Workspaces**: display name, add-on id `strata-workspaces@dacite.dev`, homepage, docs, scripts; GitHub repo `DaciteRocks/strata-workspaces` and the `origin` remote, renamed as the last step | done 2026-09-23 (see 0.12); GitHub repo rename and `origin` update pending (user renames in GitHub UI) |
 | 10 | AMO listing refresh: description and version notes cover the Phase 7 activation rule and Phase 8 terminology; version stays 6.0.0.1 unless a package was already uploaded | planned (see 0.13); split from Phase 9 |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
@@ -120,7 +120,7 @@ Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-imp
 - **Companion CSS:** `chrome/userChrome.css` (the v6 file from §8) with `chrome/README.md` install
   notes. The profile path in §8 is machine-specific; the README describes the generic path.
 - **Not done here:** the actual AMO submission (needs the user's developer account).
-- **GitHub repo:** <https://github.com/DaciteRocks/simple-workspaces>, **public, detached from the upstream fork network** since 2026-09-14 (briefly private while detaching), default branch `vivaldi-parity` (renamed from `simple-tab-groups` in phase 4). Remote `origin`, branch `vivaldi-parity`. Upstream changes still come in through the local `upstream` remote.
+- **GitHub repo:** <https://github.com/DaciteRocks/strata-workspaces> (renamed from `simple-workspaces` in Phase 9, §0.12; the GitHub-side rename is pending the user's action in the GitHub UI, and GitHub redirects the old URL meanwhile), **public, detached from the upstream fork network** since 2026-09-14 (briefly private while detaching), default branch `vivaldi-parity` (renamed from `simple-tab-groups` in phase 4). Remote `origin`, branch `vivaldi-parity`. Upstream changes still come in through the local `upstream` remote.
 - **Review (phase-review + code-review, merged):** 0 kept, 4 noted and applied. Both reviewers found the
   toolbar/sidebar titles still reading "Simple Tab Groups" (fixed: en `extensionName` renamed, which
   also gives the fork its own bookmarks root folder). Only code-review found the migration steps never
@@ -469,7 +469,19 @@ one-liner.
 
 ### 0.12 Phase 9 — rename to Strata Workspaces
 
-**Status:** planned.
+**Status:** done 2026-09-23 — phase commit `ea2efc87`, plus the review-fixes commit that carries this line.
+Repo rename **pending: user renames in GitHub UI** (`gh` still not installed), after which the orchestrator
+runs `git remote set-url origin https://github.com/DaciteRocks/strata-workspaces.git`; until then `origin`
+is still `DaciteRocks/simple-workspaces.git` and was pushed there. Gate: build green (9 baseline
+warnings), eslint 1 pre-existing error only, `test:firefox:smoke` PASS, leftover-name grep returns only
+the checklist `STORAGE_KEY`, wrapped-line check empty. Verification steps in a live Firefox not yet run.
+
+**Review.** Both `local-code-review` and `/code-review` found the same one (counted once):
+`docs/PRIVACY.md` still said "does not work with Simple / Workspaces" split across a line break, invisible
+to the line-based gate grep. Fixed, and the wrapped-line check below was added to the Gate so it cannot
+recur. Only `local-code-review` noted that the §0.5 "GitHub repo" line still named `simple-workspaces`;
+updated to `strata-workspaces` (rename pending) and added to the apply-step list below. No reuse or
+simplification findings.
 
 **Why (user, 2026-09-23):** "Simple Workspaces" is already taken on addons.mozilla.org (slug
 `simple-workspaces`); "Strata Workspaces" had no AMO match when the user checked. Nothing has been signed or
@@ -528,7 +540,11 @@ split across two commits leaves the repo half-named in between, so it stays one 
 (only the 1 pre-existing error); `cd addon && npm run test:firefox:smoke` PASS (web-ext installs the add-on
 under the new id). Then
 `git grep -n -i -E "simple.workspaces|DaciteRocks/simple-workspaces" -- . ':!docs/VIVALDI-PARITY-FORK.md'`
-returns exactly one line — the checklist `STORAGE_KEY` — and `git grep -c "Simple Tab Groups"` per file is
+returns exactly one line — the checklist `STORAGE_KEY` —
+the wrapped-line check
+`git grep -n -i -A1 -E "simple\s*$" -- . ':!docs/VIVALDI-PARITY-FORK.md' | grep -i -E "^[^:]+-[0-9]+-\s*workspaces"`
+(a line ending in "Simple" followed by a line starting with "Workspaces", which the line grep cannot see)
+returns nothing, and `git grep -c "Simple Tab Groups"` per file is
 unchanged from before the commit (upstream credit intact; on 2026-09-23: `README.md` 3, `addon/README.md` 1,
 `docs/AMO-LISTING.md` 4, `docs/PRIVACY.md` 2).
 
@@ -541,7 +557,7 @@ first-run flow clean). `about:addons` shows "Strata Workspaces", `about:debuggin
 **Apply / push order (apply-mode implementer, after the orchestrator's review):**
 
 1. Apply the review findings, re-run the gate, commit the fixes.
-2. Update this Status line (and the §0.3 row), commit.
+2. Update this Status line, the §0.3 row and the §0.5 "GitHub repo" line, commit.
 3. Rename the repo: `gh repo rename strata-workspaces -R DaciteRocks/simple-workspaces` if `gh` is on the
    PATH; otherwise stop and ask the user to rename it in the GitHub web UI, and continue once told.
 4. `git remote set-url origin https://github.com/DaciteRocks/strata-workspaces.git`

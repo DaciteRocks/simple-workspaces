@@ -35,7 +35,7 @@ None of this leaves your device through the add-on. It is removed when you unins
 - **Thumbnails** of tabs are captured and kept locally.
 
 Simple Tab Groups' GitHub Gist cloud sync is switched off in Strata Workspaces and cannot be enabled. Its
-Windows backup helper app (STGHost) only accepts the original add-on and does not work with Simple
+Windows backup helper app (STGHost) only accepts the original add-on and does not work with Strata
 Workspaces.
 
 ## Network requests
