@@ -165,7 +165,7 @@ browser's tab context menu; in W2 create group C (2 tabs).
 | 8 | Create a container tab inside A, switch W1 → W2 → W1 | the container tab is back inside A |
 | 9 | With B expanded and A collapsed, drag B's header to another position | B is still expanded after the drop and A stays collapsed (§14: the drag collapses then re-expands B; that re-expand keeps B). Dragging a *collapsed* header is not covered by §14 — note what happens |
 | 10 | Drag a single tab out of A into a new window | A survives in W1; the new window has one ungrouped tab (§16) and nothing is collapsed anywhere |
-| 11 | Options → untick "Keep only one native tab group expanded" → expand A and B | both stay expanded; re-tick → both collapse immediately (since phase 7: the active tab is the Options page, on the top bar) |
+| 11 | Options → untick "Keep only one native tab group expanded" → expand A and B | both stay expanded; re-tick → A collapses, B stays expanded (B is the remembered last explicit expand; ticking the option fires no `tabs.onActivated`, so the memory is not cleared) |
 | 12 | `about:debugging` → Inspect the fork → console filter `GroupsNativeExclusive` | one `enforceWindow` line per collapse, none during rename |
 | 13 | A expanded with one of its tabs active; click an ungrouped tab on the top bar | A collapses; the bottom bar is gone; the clicked tab is active |
 | 14 | A expanded; click a pinned tab | same as 13 — a pinned tab counts as the top bar |
@@ -375,6 +375,9 @@ error), `test:firefox:smoke` pass.
   `windowId` plus the remembered expand close it. local-code-review noted the "stored flag" sentence was
   backwards (fixed here and in the module). Only code-review noted that row 11 now expects both groups to
   collapse on re-tick.
+- **Row 11 corrected after the merge review (2026-09-23):** with the remembered explicit expand, re-ticking
+  the option collapses A and keeps B, not both; row 11 here and in `test-checklist.html` now say so, and
+  `singleExpandedNativeGroupHelp` says "at most one" tab group is shown (zero once a top-row tab is selected).
 
 ### 0.11 Phase 8 — "workspaces" in all English UI text
 
