@@ -72,7 +72,7 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | 5 | Publishing prep for a **listed** AMO release: new icon, Gist sync disabled and no data collection, privacy policy, `build-for-amo` script and reviewer README, listing draft, repo default branch | done 2026-09-14 (see 0.8); not yet exercised in a live Firefox |
 | 6 | One-command local testing: `npm run test:firefox` (build, watch, Firefox with a separate test profile, userChrome.css, checklist page), `:smoke`, `:reset` | done 2026-09-14 (see 0.9); smoke test passes headless |
 | 7 | §4.4 activation rule: activating a tab that is in no native tab group collapses the expanded group(s) of that window, so the lower bar disappears; the state-based "which group survives" rule becomes "the active tab's group, else none" | planned (see 0.10) |
-| 8 | User-visible terminology: the add-on's own groups are called **workspaces** in all English UI text; Firefox native groups are always **tab groups**; identifiers, keys and file names untouched | planned (see 0.11) |
+| 8 | User-visible terminology: the add-on's own groups are called **workspaces** in all English UI text; Firefox native groups are always **tab groups**; identifiers, keys and file names untouched | done 2026-09-23 (see 0.11); review clean from both reviewers |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
 
@@ -353,7 +353,30 @@ per top-bar click that collapsed something and none for clicks inside the expand
 
 ### 0.11 Phase 8 — "workspaces" in all English UI text
 
-**Status:** planned
+**Status:** done 2026-09-23 — phase commit `8f1308a6`; review clean from both reviewers
+(`local-code-review` and `/code-review` found nothing to fix), so no fixes commit. Gate: build green
+(9 baseline warnings), eslint 1 pre-existing error only, `test:firefox:smoke` PASS. Not yet walked through
+the Verification steps in a live Firefox.
+
+**What landed.** 6 files: `addon/src/_locales/en/messages.json` (every STG-group string now says workspace,
+native groups say tab group; `newGroupTitle` = "Workspace $id$"; one-liner "…quickly change workspaces"),
+`addon/src/help/open-in-container.html` fallback text, `addon/scripts/test-checklist.html`, `README.md`
+feature bullets, `docs/PRIVACY.md`, `docs/AMO-LISTING.md` (summary 205 characters). No keys, identifiers or
+file names changed.
+
+**Surviving "group" in `grep -n -i '"message".*group'` (27 lines), all allowed kinds:**
+
+- *Placeholder names only* (`$grouptitle$`, `$group$`, `$groupTitle$`, `$groupName$`, `$groupscount$`; the
+  visible text says workspace): lines 35, 211, 417, 427, 523, 729, 755, 935, 949, 1015, 1093, 1361.
+- *`__MSG_manageGroupsTitle__` references* (key kept, text is "Manage workspaces"): 111, 277, 385, 835.
+- *Third-party product names* "Tab Groups" (Quicksaver) and "Sync Tab Groups" (Morikko): 159, 163, 625, 629.
+- *Native tab group option strings* (`cloneSubGroupsWhenMovingTabs`, `singleExpandedNativeGroup`): 645,
+  649, 653, 657.
+- *The upstream repository URL* `github.com/drive4ik/simple-tab-groups` in the URL-rules example: 297.
+
+**Left as found (out of scope, noted by review below its reporting bar):** the `el` locale still carries
+untranslated English "Group $id$" / "Group" (other locales are untouched by design);
+`addon/package.json` description still says "tab groups" (not user-visible).
 
 **User feedback (verbatim):** "can we change the name of the window groups to workspaces instead of
 groups? there are two 'tab groups' now and that is confusing."
