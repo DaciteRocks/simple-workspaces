@@ -72,7 +72,7 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | 5 | Publishing prep for a **listed** AMO release: new icon, Gist sync disabled and no data collection, privacy policy, `build-for-amo` script and reviewer README, listing draft, repo default branch | done 2026-09-14 (see 0.8); not yet exercised in a live Firefox |
 | 6 | One-command local testing: `npm run test:firefox` (build, watch, Firefox with a separate test profile, userChrome.css, checklist page), `:smoke`, `:reset` | done 2026-09-14 (see 0.9); smoke test passes headless |
 | 7 | §4.4 activation rule: activating a tab that is in no native tab group collapses the expanded group(s) of that window, so the lower bar disappears; the state-based "which group survives" rule becomes "the active tab's group, else none" | done 2026-09-23 (see 0.10); manual rows 13–18 not yet run |
-| 8 | User-visible terminology: the add-on's own groups are called **workspaces** in all English UI text; Firefox native groups are always **tab groups**; identifiers, keys and file names untouched | planned (see 0.11) |
+| 8 | User-visible terminology: the add-on's own groups are called **workspaces** in all English UI text; Firefox native groups are always **tab groups**; identifiers, keys and file names untouched | done 2026-09-23 (see 0.11); review clean from both reviewers |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
 
@@ -165,7 +165,7 @@ browser's tab context menu; in W2 create group C (2 tabs).
 | 8 | Create a container tab inside A, switch W1 → W2 → W1 | the container tab is back inside A |
 | 9 | With B expanded and A collapsed, drag B's header to another position | B is still expanded after the drop and A stays collapsed (§14: the drag collapses then re-expands B; that re-expand keeps B). Dragging a *collapsed* header is not covered by §14 — note what happens |
 | 10 | Drag a single tab out of A into a new window | A survives in W1; the new window has one ungrouped tab (§16) and nothing is collapsed anywhere |
-| 11 | Options → untick "Keep only one native tab group expanded" → expand A and B | both stay expanded; re-tick → both collapse immediately (since phase 7: the active tab is the Options page, on the top bar) |
+| 11 | Options → untick "Keep only one native tab group expanded" → expand A and B | both stay expanded; re-tick → A collapses, B stays expanded (B is the remembered last explicit expand; ticking the option fires no `tabs.onActivated`, so the memory is not cleared) |
 | 12 | `about:debugging` → Inspect the fork → console filter `GroupsNativeExclusive` | one `enforceWindow` line per collapse, none during rename |
 | 13 | A expanded with one of its tabs active; click an ungrouped tab on the top bar | A collapses; the bottom bar is gone; the clicked tab is active |
 | 14 | A expanded; click a pinned tab | same as 13 — a pinned tab counts as the top bar |
@@ -375,10 +375,36 @@ error), `test:firefox:smoke` pass.
   `windowId` plus the remembered expand close it. local-code-review noted the "stored flag" sentence was
   backwards (fixed here and in the module). Only code-review noted that row 11 now expects both groups to
   collapse on re-tick.
+- **Row 11 corrected after the merge review (2026-09-23):** with the remembered explicit expand, re-ticking
+  the option collapses A and keeps B, not both; row 11 here and in `test-checklist.html` now say so, and
+  `singleExpandedNativeGroupHelp` says "at most one" tab group is shown (zero once a top-row tab is selected).
 
 ### 0.11 Phase 8 — "workspaces" in all English UI text
 
-**Status:** planned
+**Status:** done 2026-09-23 — phase commit `8f1308a6`; review clean from both reviewers
+(`local-code-review` and `/code-review` found nothing to fix), so no fixes commit. Gate: build green
+(9 baseline warnings), eslint 1 pre-existing error only, `test:firefox:smoke` PASS. Not yet walked through
+the Verification steps in a live Firefox.
+
+**What landed.** 6 files: `addon/src/_locales/en/messages.json` (every STG-group string now says workspace,
+native groups say tab group; `newGroupTitle` = "Workspace $id$"; one-liner "…quickly change workspaces"),
+`addon/src/help/open-in-container.html` fallback text, `addon/scripts/test-checklist.html`, `README.md`
+feature bullets, `docs/PRIVACY.md`, `docs/AMO-LISTING.md` (summary 205 characters). No keys, identifiers or
+file names changed.
+
+**Surviving "group" in `grep -n -i '"message".*group'` (27 lines), all allowed kinds:**
+
+- *Placeholder names only* (`$grouptitle$`, `$group$`, `$groupTitle$`, `$groupName$`, `$groupscount$`; the
+  visible text says workspace): lines 35, 211, 417, 427, 523, 729, 755, 935, 949, 1015, 1093, 1361.
+- *`__MSG_manageGroupsTitle__` references* (key kept, text is "Manage workspaces"): 111, 277, 385, 835.
+- *Third-party product names* "Tab Groups" (Quicksaver) and "Sync Tab Groups" (Morikko): 159, 163, 625, 629.
+- *Native tab group option strings* (`cloneSubGroupsWhenMovingTabs`, `singleExpandedNativeGroup`): 645,
+  649, 653, 657.
+- *The upstream repository URL* `github.com/drive4ik/simple-tab-groups` in the URL-rules example: 297.
+
+**Left as found (out of scope, noted by review below its reporting bar):** the `el` locale still carries
+untranslated English "Group $id$" / "Group" (other locales are untouched by design);
+`addon/package.json` description still says "tab groups" (not user-visible).
 
 **User feedback (verbatim):** "can we change the name of the window groups to workspaces instead of
 groups? there are two 'tab groups' now and that is confusing."

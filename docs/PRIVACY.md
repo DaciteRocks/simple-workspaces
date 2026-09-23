@@ -19,7 +19,7 @@ session data for each tab:
 
 - your workspaces: names, colors, icons and settings;
 - the tabs in each workspace: address (URL), title, container and, if you enable it, the site icon;
-- which Firefox tab group each tab belongs to, and the groups' titles, colors and collapsed state;
+- which Firefox tab group each tab belongs to, and the tab groups' titles, colors and collapsed state;
 - your add-on settings.
 
 None of this leaves your device through the add-on. It is removed when you uninstall the add-on.
@@ -49,7 +49,7 @@ normally would, and the add-on does not read or send their content.
 
 Firefox shows the permissions the add-on requests at install. They are used only for the add-on's own
 features: managing, hiding and grouping tabs; opening tabs in the right container; its menus,
-notifications, hotkeys and in-page group picker; saving backups; and detecting other tab add-ons that
+notifications, hotkeys and in-page workspace picker; saving backups; and detecting other tab add-ons that
 conflict with it. None of them is used to send data anywhere.
 
 ## Children

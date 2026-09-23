@@ -110,9 +110,9 @@
         <ol>
             <li>Click the Simple Workspaces toolbar button and create two workspaces, named <b>W1</b> and <b>W2</b>.</li>
             <li>In W1, open a few sites using the links below. Then select 3 tabs, right-click, and choose
-                <b>Add Tabs to New Group</b>. Name the group <b>A</b>.</li>
-            <li>Select 2 other tabs the same way and make group <b>B</b>.</li>
-            <li>Switch to W2, open 2 tabs and make group <b>C</b>.</li>
+                <b>Add Tabs to New Group</b>. Name the tab group <b>A</b>.</li>
+            <li>Select 2 other tabs the same way and make tab group <b>B</b>.</li>
+            <li>Switch to W2, open 2 tabs and make tab group <b>C</b>.</li>
         </ol>
         <p>Sample sites:
             <a href="https://example.com/" target="_blank">example.com</a>,
@@ -148,7 +148,7 @@ const TESTS = [
         expected: 'B collapses. The selected tab from B stays visible next to B\'s collapsed header. A is open.',
     }, {
         title: 'While A is open, select two ungrouped tabs and choose "Add Tabs to New Group"',
-        expected: 'The new group opens and A collapses.',
+        expected: 'The new tab group opens and A collapses.',
     }, {
         title: 'While A is open, rename B by typing several characters',
         expected: 'A stays open. Nothing collapses while you type.',
@@ -157,7 +157,7 @@ const TESTS = [
         expected: 'In W2 you see no A or B headers. Back in W1, A and B come back with their names and colors, and at most one is open.',
     }, {
         title: 'Restart test: close this Firefox window, then run the command again',
-        expected: 'Your workspaces and groups are still there, grouped, with names and colors, and at most one open. Note: this setup reinstalls the add-on after Firefox restores the tabs, so it is close to, but not the same as, a real restart with an installed add-on.',
+        expected: 'Your workspaces and tab groups are still there, grouped, with names and colors, and at most one open. Note: this setup reinstalls the add-on after Firefox restores the tabs, so it is close to, but not the same as, a real restart with an installed add-on.',
     }, {
         title: 'Put two tabs of A side by side in split view, then switch to W2',
         expected: 'Known risk: check whether an empty placeholder tab appears in W2. Mark fail if it does, and describe it in the note.',
@@ -172,7 +172,7 @@ const TESTS = [
         expected: 'A keeps its other tabs. The new window has one ungrouped tab. Nothing collapses anywhere.',
     }, {
         title: 'Settings: untick "Keep only one native tab group expanded at a time", then open A and B',
-        expected: 'Both stay open. When you tick it again, both close right away, because the selected tab (the Settings page) is not in a group.',
+        expected: 'Both stay open. When you tick it again, A collapses but B stays open. B is remembered as the last tab group you opened, and ticking the option does not switch tabs, so nothing clears that memory.',
     }, {
         title: 'Look around Settings and the toolbar popup',
         expected: 'The new icon shows in the toolbar. There is no cloud sync section, sync button or sync menu item. No error notifications appear.',

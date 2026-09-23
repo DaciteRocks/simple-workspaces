@@ -16,9 +16,9 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 
 **Add-on URL slug:** `simple-workspaces`
 
-**Summary** (max 250 characters, this one is 201):
+**Summary** (max 250 characters, this one is 205):
 
-> Vivaldi-style workspaces for your tabs: switch the whole tab bar between named workspaces, keep Firefox tab groups inside each one, restore them after a restart, and keep just one group open at a time.
+> Vivaldi-style workspaces for your tabs: switch the whole tab bar between named workspaces, keep Firefox tab groups inside each one, restore them after a restart, and keep just one tab group open at a time.
 
 **Description:**
 
@@ -30,14 +30,14 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 > - Tabs of other workspaces are hidden, not closed, so switching is instant.
 >
 > **Firefox tab groups inside each workspace**
-> - Use Firefox's own tab groups inside a workspace. Each workspace remembers its groups, with their
+> - Use Firefox's own tab groups inside a workspace. Each workspace remembers its tab groups, with their
 >   names, colors and which tabs belong to them.
-> - Groups never leak into other workspaces, and they come back grouped after a browser restart.
+> - Tab groups never leak into other workspaces, and they come back grouped after a browser restart.
 >
-> **One group open at a time**
+> **One tab group open at a time**
 > - Opening a tab group automatically collapses the one that was open, like Vivaldi's tab stacks. It can
 >   be turned off in Settings.
-> - Optional: the project's `userChrome.css` shows the open group on its own second row under the tab
+> - Optional: the project's `userChrome.css` shows the open tab group on its own second row under the tab
 >   bar. Instructions are in the source repository.
 >
 > **Also included**
@@ -77,8 +77,8 @@ recommended so users can see that.
 
 1. The toolbar popup listing several workspaces.
 2. The tab bar with two Firefox tab groups, one open and one collapsed.
-3. The same window after switching to another workspace, showing its own tabs and groups.
-4. The `userChrome.css` two-row look, with the open group on the second row.
+3. The same window after switching to another workspace, showing its own tabs and tab groups.
+4. The `userChrome.css` two-row look, with the open tab group on the second row.
 5. The Settings page section with "Keep only one native tab group expanded at a time".
 
 ## Version notes (6.0.0.1)
@@ -100,9 +100,9 @@ recommended so users can see that.
 > icons on the About page and the conflicting add-on icons use a local generic icon instead of
 > addons.mozilla.org.
 >
-> Permissions: `tabs`, `tabHide`, `tabGroups`, `sessions` manage and hide workspace tabs and their groups;
+> Permissions: `tabs`, `tabHide`, `tabGroups`, `sessions` manage and hide workspace tabs and their tab groups;
 > `contextualIdentities`, `cookies`, `webRequest`, `webRequestBlocking`, `<all_urls>` reopen a tab in its
-> workspace's container; the content script on all pages listens for the add-on's own hotkeys and draws its in-page group picker
+> workspace's container; the content script on all pages listens for the add-on's own hotkeys and draws its in-page workspace picker
 > and prompt dialogs;
 > `menus`, `notifications`, `alarms` for context menus, messages and scheduled backups; `downloads` saves
 > backup files; `management` detects conflicting tab add-ons; `storage`, `unlimitedStorage` store
