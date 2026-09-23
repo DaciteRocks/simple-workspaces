@@ -73,6 +73,8 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | 6 | One-command local testing: `npm run test:firefox` (build, watch, Firefox with a separate test profile, userChrome.css, checklist page), `:smoke`, `:reset` | done 2026-09-14 (see 0.9); smoke test passes headless |
 | 7 | §4.4 activation rule: activating a tab that is in no native tab group collapses the expanded group(s) of that window, so the lower bar disappears; the state-based "which group survives" rule becomes "the active tab's group, else none" | done 2026-09-23 (see 0.10); manual rows 13–18 not yet run |
 | 8 | User-visible terminology: the add-on's own groups are called **workspaces** in all English UI text; Firefox native groups are always **tab groups**; identifiers, keys and file names untouched | done 2026-09-23 (see 0.11); review clean from both reviewers |
+| 9 | Rename to **Strata Workspaces**: display name, add-on id `strata-workspaces@dacite.dev`, homepage, docs, scripts; GitHub repo `DaciteRocks/strata-workspaces` and the `origin` remote, renamed as the last step | planned (see 0.12) |
+| 10 | AMO listing refresh: description and version notes cover the Phase 7 activation rule and Phase 8 terminology; version stays 6.0.0.1 unless a package was already uploaded | planned (see 0.13); split from Phase 9 |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
 
@@ -464,6 +466,149 @@ one-liner.
   Read every changed line once in place.
 - *Plural of the product.* "Simple Workspaces" (product) versus "workspaces" (the things) — do not
   capitalise the common noun.
+
+### 0.12 Phase 9 — rename to Strata Workspaces
+
+**Status:** planned.
+
+**Why (user, 2026-09-23):** "Simple Workspaces" is already taken on addons.mozilla.org (slug
+`simple-workspaces`); "Strata Workspaces" had no AMO match when the user checked. Nothing has been signed or
+uploaded, so the add-on id can still change for free — and this is the last moment it can (§0.7: the id is
+permanent after the first AMO signing).
+
+**Decisions (do not relitigate):**
+
+- Name **Strata Workspaces**; id **`strata-workspaces@dacite.dev`**; GitHub **`DaciteRocks/strata-workspaces`**;
+  AMO slug `strata-workspaces`. No Mozilla or Vivaldi trademark in the name, as the AMO linter requires.
+- `short_name` stays `Workspaces`: it names the thing, not the brand.
+- English only. Only `en` defines `extensionName` (verified 2026-09-23); every other locale falls back to it,
+  so the toolbar button, sidebar, notifications, Backup tab and bookmarks root folder all follow.
+- Upstream credit untouched: every "Simple Tab Groups" / "STG" product mention, the upstream AMO badges and
+  link at the top of `README.md`, translator `description` fields, `.github/ISSUE_TEMPLATE`,
+  `addon/package.json` `name`, the `STG-backups` folder — same line as Phase 4 (§0.7).
+- Internal identifiers untouched: the checklist's `STORAGE_KEY = 'simple-workspaces-checklist-v1'` (renaming
+  it would discard saved checklist answers in the test profile for nothing a user sees); the local folder
+  `simple-tab-groups`; this document's file name; the history in §0.3 row 4 and §0.7, which keep saying
+  Simple Workspaces because that is what happened.
+- Zip names are derived from the manifest (`addon/scripts/build-zip.js`, `getZipFileName`: id + version), so
+  only the two docs that spell them out are edited; no script changes.
+- **The repo rename is the LAST step**, done by the apply-mode implementer after the fixes commit, so the
+  in-repo links, the `origin` URL and the GitHub name land together. GitHub redirects the old URL meanwhile.
+- **`gh` is not installed on this machine** (`where.exe gh` → not found on 2026-09-23; §0 already records
+  this). The rename is therefore either the user's own action in the GitHub web UI (Settings → General →
+  Repository name) or `gh repo rename strata-workspaces -R DaciteRocks/simple-workspaces` if the user has
+  installed gh by then. The implementer never installs tools: at that step it stops and asks.
+
+**Scope.** What exists at the end: every user-visible string, document and script comment that carried the
+old name, id or repo URL carries the new one; the add-on installs as `strata-workspaces@dacite.dev`; the
+GitHub repo and the `origin` remote are `DaciteRocks/strata-workspaces`. The complete occurrence list, from
+`git grep -n -i -E "simple.workspaces|DaciteRocks" -- . ':!docs/VIVALDI-PARITY-FORK.md'` on 2026-09-23
+(the lockfile and `chrome/` have no matches):
+
+| File | Edit |
+| - | - |
+| `addon/src/manifest.json` | `browser_specific_settings.gecko.id`, `homepage_url` |
+| `addon/src/_locales/en/messages.json` | `extensionName` message → `Strata Workspaces` |
+| `addon/src/help/db-error-reinstall.html` | the "Install" link URL |
+| `addon/src/icons/icon.svg`, `addon/src/js/constants.js` | one comment each |
+| `README.md` | title, fork banner (name and id), Gesturefy `Add-on ID` line; upstream badges stay |
+| `addon/README.md` | title, first paragraph, source URL, both zip names |
+| `addon/scripts/test-checklist.html` | `<title>`, `<h1>`, setup step, repo link, results header; not `STORAGE_KEY` |
+| `addon/scripts/test-firefox.js` | header comment |
+| `docs/AMO-LISTING.md` | title, both zip names, Name, slug, first description line, source / support / homepage URLs, first words of the version notes — name and URLs only; the content refresh is Phase 10 |
+| `docs/PRIVACY.md` | title, three name mentions, two URLs |
+| `docs/VIVALDI-PARITY-FORK.md` | this Status line and the §0.3 row only |
+
+**Budget:** 11 files touched + this spec, every one a one-to-five-line mechanical edit; to start, read the
+grep output above and §0.7 (the Phase 4 precedent) — no JS is read or reasoned about. This is over the
+8-file guideline by count and well under it on the axis that matters (context spent reading), and a rename
+split across two commits leaves the repo half-named in between, so it stays one commit.
+
+**Gate:** `cd addon && npm run build` green (9 baseline warnings); `npx eslint addon/src` from the repo root
+(only the 1 pre-existing error); `cd addon && npm run test:firefox:smoke` PASS (web-ext installs the add-on
+under the new id). Then
+`git grep -n -i -E "simple.workspaces|DaciteRocks/simple-workspaces" -- . ':!docs/VIVALDI-PARITY-FORK.md'`
+returns exactly one line — the checklist `STORAGE_KEY` — and `git grep -c "Simple Tab Groups"` per file is
+unchanged from before the commit (upstream credit intact; on 2026-09-23: `README.md` 3, `addon/README.md` 1,
+`docs/AMO-LISTING.md` 4, `docs/PRIVACY.md` 2).
+
+**Verification:** `cd addon && npm run test:firefox:reset && npm run test:firefox` (the new id is a new
+add-on to Firefox, so the old profile's workspaces would be invisible anyway; reset keeps the checklist's
+first-run flow clean). `about:addons` shows "Strata Workspaces", `about:debugging` shows
+`strata-workspaces@dacite.dev`, the toolbar popup and the checklist tab title say Strata. After the push:
+`git remote -v` shows `strata-workspaces.git` and `git ls-remote origin HEAD` answers.
+
+**Apply / push order (apply-mode implementer, after the orchestrator's review):**
+
+1. Apply the review findings, re-run the gate, commit the fixes.
+2. Update this Status line (and the §0.3 row), commit.
+3. Rename the repo: `gh repo rename strata-workspaces -R DaciteRocks/simple-workspaces` if `gh` is on the
+   PATH; otherwise stop and ask the user to rename it in the GitHub web UI, and continue once told.
+4. `git remote set-url origin https://github.com/DaciteRocks/strata-workspaces.git`
+5. `git push origin vivaldi-parity`, then `git ls-remote origin HEAD` to confirm the new URL answers.
+
+**Risks / unknowns:**
+
+- *Slug.* AMO derives the slug from the name and lets it be edited on the form; if `strata-workspaces` is
+  claimed between now and submission, change the slug on the form (it is in no file but the listing draft).
+  The id is what must never collide, and `@dacite.dev` is ours.
+- *Old-id state in profiles.* `storage.local` and `sessions` tab values are per extension id, so anything
+  created under `simple-workspaces@dacite.dev` — in the test profile, or in the user's own Firefox if the fork
+  was ever loaded there — is invisible to the renamed add-on and stays on disk. `test:firefox:reset` for the
+  test profile; for a real profile, export a backup under the old id first (§0.7 migration steps), if there
+  is anything worth keeping.
+- *GitHub redirect.* The redirect from `simple-workspaces` lasts until a repo with that name is created under
+  `DaciteRocks`; do not create one.
+- *Locale leftovers.* Other locales never defined `extensionName`, so nothing is there to rename. Any "STG"
+  strings review turns up in other locales are the 19-locale inflected set left by Phase 4 — still out of
+  scope.
+- *Stale local zips.* `addon/dist-zip/` (gitignored) still holds `simple-workspaces@dacite.dev-v6.0.0.1-*.zip`
+  if `build-zip` was ever run; rebuild once Phase 10 has settled the version.
+
+### 0.13 Phase 10 — AMO listing refresh for Phases 7 and 8 (split from Phase 9)
+
+**Status:** planned. Split out of the requested Phase 9: it is a different claim (what the listing says the
+add-on does, not what the add-on is called), and it is reviewed differently (prose read, not grep). One file.
+
+**Version — recommendation: keep `6.0.0.1`.** No package has been uploaded to AMO, and AMO only requires
+each *uploaded* version to be new; the version notes are a first-release note whatever number they carry.
+The zip names, `addon/README.md` and the listing all follow `manifest.json`, so a bump changes three
+documents for no reader. **Bump to `6.0.0.2` only if a `6.0.0.1` package was ever uploaded to AMO, even as a
+cancelled or deleted submission** — AMO refuses a re-used version number permanently. That is an open
+question for the user (below). If bumping: `addon/src/manifest.json` `version`, the two zip names and the
+"Version notes (…)" heading in `docs/AMO-LISTING.md`; `addon/README.md` uses a `<version>` placeholder.
+
+**Scope.** `docs/AMO-LISTING.md` only (plus `manifest.json` if the bump is chosen):
+
+- *Description, "One tab group open at a time" block* — add the Phase 7 rule: selecting a tab on the top bar
+  (an ungrouped or pinned tab, or the collapsed group's own active tab) collapses the open tab group, so the
+  lower row disappears, as in Vivaldi. Keep the collapse-only nature honest: a tab group is opened from its
+  header, never automatically (§0.10, user decision 2026-09-23).
+- *Terminology (Phase 8)* — the add-on's groups are "workspaces", Firefox's are "tab groups", never a bare
+  "group"; the block heading and screenshot 5's caption must match the live option string in
+  `addon/src/_locales/en/messages.json` (`singleExpandedNativeGroup`, currently "Keep only one native tab
+  group expanded at a time (Vivaldi-style)").
+- *Version notes* — rewrite as the first-release note covering everything landed: workspaces with tab groups
+  that persist per workspace and across restarts; one tab group open at a time; a top-bar tab closes it.
+  Terminology is not a note for a first release (nobody saw "group"), except one line for users coming from
+  upstream: "Compared with Simple Tab Groups, its groups are called workspaces here."
+- *Known limitations* — one sentence: activating a tab inside a collapsed tab group does not open it (this
+  is Firefox's own behavior; open it from the header).
+- Summary stays ≤ 250 characters and the file keeps stating its count (205 today). Keep the draft's markdown;
+  conversion at paste time is unchanged from Phase 5.
+
+**Budget:** 1 file (+ `manifest.json` if bumping) + this spec. Read to start: `docs/AMO-LISTING.md`, the
+first 30 lines of §0.10, en `messages.json` around the `singleExpandedNativeGroup` entries.
+
+**Gate:** no code changes, so build and lint are unaffected (run `cd addon && npm run build` if the manifest
+changed). `grep -n -i -E "\bgroups?\b" docs/AMO-LISTING.md` shows only "tab group(s)" and product names,
+no bare "group"; the summary count stated in the file is the real one (`wc -m` on the quoted line).
+
+**Verification:** read the description once as an AMO visitor; every claim in it matches what
+`npm run test:firefox` shows, with checklist rows 13–18 covering the Phase 7 sentence.
+
+**Risks:** none technical. If the user chooses the bump, the "Stale local zips" line in Phase 9 applies —
+run `npm run build-zip` once afterwards so the package names in the listing match files on disk.
 
 ---
 
