@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" style="color-scheme: light dark;" fill="context-fill light-dark(#5b5b66,#fbfbfe)">
-    <!-- Simple Workspaces: a workspace behind, and the active workspace in front with a two-level tab bar -->
+    <!-- Strata Workspaces: a workspace behind, and the active workspace in front with a two-level tab bar -->
     <defs>
         <clipPath id="behind-front">
             <path clip-rule="evenodd" d="M0 0H128V128H0Z M-6 30H102V134H-6Z" />

@@ -1,4 +1,4 @@
-# Simple Workspaces — addons.mozilla.org listing draft
+# Strata Workspaces — addons.mozilla.org listing draft
 
 Paste-ready text for the AMO submission form. Choose **"On this site"** (listed) when uploading.
 
@@ -6,15 +6,15 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 
 | Field | Value |
 | - | - |
-| Package | `addon/dist-zip/simple-workspaces@dacite.dev-v6.0.0.1-prod.zip` from `npm run build-zip` |
-| Source code | `addon/dist-zip/simple-workspaces@dacite.dev-v6.0.0.1-dev.zip` — answer **Yes** to "Do you need to submit source code?" (webpack) |
+| Package | `addon/dist-zip/strata-workspaces@dacite.dev-v6.0.0.1-prod.zip` from `npm run build-zip` |
+| Source code | `addon/dist-zip/strata-workspaces@dacite.dev-v6.0.0.1-dev.zip` — answer **Yes** to "Do you need to submit source code?" (webpack) |
 | Compatibility | Firefox for desktop only (not Android) |
 
 ## Describe
 
-**Name:** Simple Workspaces
+**Name:** Strata Workspaces
 
-**Add-on URL slug:** `simple-workspaces`
+**Add-on URL slug:** `strata-workspaces`
 
 **Summary** (max 250 characters, this one is 205):
 
@@ -22,7 +22,7 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 
 **Description:**
 
-> Simple Workspaces brings Vivaldi-style workspaces and tab stacks to Firefox.
+> Strata Workspaces brings Vivaldi-style workspaces and tab stacks to Firefox.
 >
 > **Workspaces**
 > - Keep separate, named sets of tabs and switch the whole tab bar between them in one click, from the
@@ -46,7 +46,7 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 > **Privacy:** collects nothing and sends nothing. No analytics, no accounts, no developer server.
 >
 > **Credits:** based on Simple Tab Groups by Drive4ik, licensed under the Mozilla Public License 2.0.
-> Source code: https://github.com/DaciteRocks/simple-workspaces
+> Source code: https://github.com/DaciteRocks/strata-workspaces
 >
 > **Known limitations:** some non-English translations still say "STG". Simple Tab Groups' cloud sync is
 > switched off, and its plugins and Windows backup helper do not work with this add-on. Do not run it
@@ -56,7 +56,7 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 
 **Support email:** leave empty, or use an address you want to publish.
 
-**Support website:** https://github.com/DaciteRocks/simple-workspaces/issues
+**Support website:** https://github.com/DaciteRocks/strata-workspaces/issues
 
 **License:** Mozilla Public License 2.0
 
@@ -65,7 +65,7 @@ recommended so users can see that.
 
 ## Additional details
 
-**Homepage:** https://github.com/DaciteRocks/simple-workspaces
+**Homepage:** https://github.com/DaciteRocks/strata-workspaces
 
 **Tags** (pick from AMO's list): tabs, productivity, tab management
 
@@ -83,7 +83,7 @@ recommended so users can see that.
 
 ## Version notes (6.0.0.1)
 
-> First release of Simple Workspaces: workspaces with Firefox tab groups that persist per workspace and
+> First release of Strata Workspaces: workspaces with Firefox tab groups that persist per workspace and
 > across restarts, and one tab group open at a time.
 
 ## Notes to reviewer

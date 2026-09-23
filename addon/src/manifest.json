@@ -3,7 +3,7 @@
 
     "browser_specific_settings": {
         "gecko": {
-            "id": "simple-workspaces@dacite.dev",
+            "id": "strata-workspaces@dacite.dev",
             "strict_min_version": "140.0",
             "data_collection_permissions": {
                 "required": ["none"]
@@ -16,7 +16,7 @@
     "description": "__MSG_extensionDescription__",
     "version": "6.0.0.1",
     "author": "Vitalii Bavykin",
-    "homepage_url": "https://github.com/DaciteRocks/simple-workspaces",
+    "homepage_url": "https://github.com/DaciteRocks/strata-workspaces",
 
     "incognito": "not_allowed",
 

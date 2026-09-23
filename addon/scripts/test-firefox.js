@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* global process */
 
-// One-command local test run for Simple Workspaces.
+// One-command local test run for Strata Workspaces.
 //
 //   npm run test:firefox          build, watch, open Firefox with the add-on in a separate test profile
 //   npm run test:firefox:smoke    headless check that the add-on installs, then exit (for automation)

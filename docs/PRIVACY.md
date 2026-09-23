@@ -1,14 +1,14 @@
-# Simple Workspaces — Privacy Policy
+# Strata Workspaces — Privacy Policy
 
 Last updated: 2026-09-14
 
-Simple Workspaces is a Firefox add-on that organizes tabs into workspaces and native tab groups. It is
+Strata Workspaces is a Firefox add-on that organizes tabs into workspaces and native tab groups. It is
 based on Simple Tab Groups by Drive4ik and is published under the Mozilla Public License 2.0. Source code:
-<https://github.com/DaciteRocks/simple-workspaces>.
+<https://github.com/DaciteRocks/strata-workspaces>.
 
 ## The short version
 
-Simple Workspaces does not collect, transmit or sell any data. There is no analytics, telemetry,
+Strata Workspaces does not collect, transmit or sell any data. There is no analytics, telemetry,
 tracking, advertising, account or developer server. Everything the add-on stores stays in your Firefox
 profile.
 
@@ -34,7 +34,7 @@ None of this leaves your device through the add-on. It is removed when you unins
   permission, which Firefox asks for.
 - **Thumbnails** of tabs are captured and kept locally.
 
-Simple Tab Groups' GitHub Gist cloud sync is switched off in Simple Workspaces and cannot be enabled. Its
+Simple Tab Groups' GitHub Gist cloud sync is switched off in Strata Workspaces and cannot be enabled. Its
 Windows backup helper app (STGHost) only accepts the original add-on and does not work with Simple
 Workspaces.
 
@@ -62,4 +62,4 @@ Changes to this policy are published with the add-on's source code and in its ad
 
 ## Contact
 
-Open an issue at <https://github.com/DaciteRocks/simple-workspaces/issues>.
+Open an issue at <https://github.com/DaciteRocks/strata-workspaces/issues>.

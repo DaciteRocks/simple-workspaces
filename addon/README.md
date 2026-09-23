@@ -1,8 +1,8 @@
 
-# Instructions for Mozilla reviewers — Simple Workspaces
+# Instructions for Mozilla reviewers — Strata Workspaces
 
-Simple Workspaces is a fork of Simple Tab Groups (<https://github.com/Drive4ik/simple-tab-groups>,
-MPL-2.0). Full source: <https://github.com/DaciteRocks/simple-workspaces>.
+Strata Workspaces is a fork of Simple Tab Groups (<https://github.com/Drive4ik/simple-tab-groups>,
+MPL-2.0). Full source: <https://github.com/DaciteRocks/strata-workspaces>.
 
 The add-on source is the `.vue` and `.js` files in `src`. webpack bundles only the four UI entry points
 (`popup`, `options`, `manage`, `web/content-script`); every other file in `src` is copied to `dist`
@@ -35,8 +35,8 @@ npm ci
 npm run build-zip
 ```
 
-This creates `dist-zip/simple-workspaces@dacite.dev-v<version>-prod.zip` (the package) and
-`dist-zip/simple-workspaces@dacite.dev-v<version>-dev.zip` (this source archive).
+This creates `dist-zip/strata-workspaces@dacite.dev-v<version>-prod.zip` (the package) and
+`dist-zip/strata-workspaces@dacite.dev-v<version>-dev.zip` (this source archive).
 
 ## Data collection
 

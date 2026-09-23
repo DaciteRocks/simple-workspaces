@@ -126,7 +126,7 @@ export const DEFAULT_BOOKMARKS_PARENTS = Object.freeze([
     'unfiled_____',
 ]);
 
-// GitHub Gist cloud sync (upstream feature) is switched off in Simple Workspaces: it is not needed for
+// GitHub Gist cloud sync (upstream feature) is switched off in Strata Workspaces: it is not needed for
 // the fork's goals, and with it off the add-on sends no data anywhere (docs/PRIVACY.md). The upstream code
 // stays in place for easy merges; this flag hides its UI, hotkey and menu item and stops the background.
 export const CLOUD_SYNC_AVAILABLE = false;
