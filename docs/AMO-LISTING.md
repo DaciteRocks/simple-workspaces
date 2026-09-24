@@ -35,8 +35,11 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 > - Tab groups never leak into other workspaces, and they come back grouped after a browser restart.
 >
 > **One tab group open at a time**
-> - Opening a tab group automatically collapses the one that was open, like Vivaldi's tab stacks. It can
->   be turned off in Settings.
+> - Opening a tab group automatically collapses the one that was open, like Vivaldi's tab stacks.
+> - Selecting a tab on the top bar (an ungrouped or pinned tab, or the tab shown beside a collapsed tab
+>   group's header) collapses the open tab group, so the lower row disappears, as in Vivaldi.
+> - Tab groups are only ever collapsed automatically, never opened: you open a tab group from its header.
+> - Both rules can be turned off in Settings ("Keep only one native tab group expanded at a time").
 > - Optional: the project's `userChrome.css` shows the open tab group on its own second row under the tab
 >   bar. Instructions are in the source repository.
 >
@@ -48,9 +51,10 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 > **Credits:** based on Simple Tab Groups by Drive4ik, licensed under the Mozilla Public License 2.0.
 > Source code: https://github.com/DaciteRocks/strata-workspaces
 >
-> **Known limitations:** some non-English translations still say "STG". Simple Tab Groups' cloud sync is
-> switched off, and its plugins and Windows backup helper do not work with this add-on. Do not run it
-> together with Simple Tab Groups.
+> **Known limitations:** selecting a tab inside a collapsed tab group does not open that tab group (this
+> is Firefox's own behavior); open it from its header. Some non-English translations still say "STG".
+> Simple Tab Groups' cloud sync is switched off, and its plugins and Windows backup helper do not work
+> with this add-on. Do not run it together with Simple Tab Groups.
 
 **Categories:** Tabs
 
@@ -79,17 +83,23 @@ recommended so users can see that.
 2. The tab bar with two Firefox tab groups, one open and one collapsed.
 3. The same window after switching to another workspace, showing its own tabs and tab groups.
 4. The `userChrome.css` two-row look, with the open tab group on the second row.
-5. The Settings page section with "Keep only one native tab group expanded at a time".
+5. The Settings page section with "Keep only one native tab group expanded at a time (Vivaldi-style)".
 
 ## Version notes (6.0.0.1)
 
-> First release of Strata Workspaces: workspaces with Firefox tab groups that persist per workspace and
-> across restarts, and one tab group open at a time.
+> First release of Strata Workspaces:
+> - Workspaces: named sets of tabs, switched in one click, with Firefox tab groups that are kept per
+>   workspace and come back after a restart.
+> - One tab group open at a time: opening a tab group collapses the one that was open.
+> - Selecting a tab on the top bar collapses the open tab group, so the lower row disappears.
+>
+> Compared with Simple Tab Groups, its groups are called workspaces here.
 
 ## Notes to reviewer
 
 > This is a fork of Simple Tab Groups (MPL-2.0) with a new name, icon and add-on id, plus a module that
-> keeps one native tab group expanded per window (`src/js/groups-native-exclusive.js`). Upstream's GitHub
+> keeps at most one native tab group expanded per window and collapses it when a tab outside it is
+> selected (`src/js/groups-native-exclusive.js`). Upstream's GitHub
 > Gist cloud sync is disabled by `CLOUD_SYNC_AVAILABLE = false` in `src/js/constants.js`; its code is kept
 > for merges but its UI, hotkey, menu item and background alarm are off.
 >
