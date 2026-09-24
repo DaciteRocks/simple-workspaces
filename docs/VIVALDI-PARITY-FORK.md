@@ -74,7 +74,7 @@ Browser facts the fork relies on (all from `docs/TABGROUPS-BEHAVIOR.md`, verifie
 | 7 | §4.4 activation rule: activating a tab that is in no native tab group collapses the expanded group(s) of that window, so the lower bar disappears; the state-based "which group survives" rule becomes "the active tab's group, else none" | done 2026-09-23 (see 0.10); manual rows 13–18 not yet run |
 | 8 | User-visible terminology: the add-on's own groups are called **workspaces** in all English UI text; Firefox native groups are always **tab groups**; identifiers, keys and file names untouched | done 2026-09-23 (see 0.11); review clean from both reviewers |
 | 9 | Rename to **Strata Workspaces**: display name, add-on id `strata-workspaces@dacite.dev`, homepage, docs, scripts; GitHub repo `DaciteRocks/strata-workspaces` and the `origin` remote, renamed as the last step | done 2026-09-23 (see 0.12); GitHub repo renamed and `origin` updated 2026-09-23 |
-| 10 | AMO listing refresh: description and version notes cover the Phase 7 activation rule and Phase 8 terminology; version stays 6.0.0.1 unless a package was already uploaded | planned (see 0.13); split from Phase 9 |
+| 10 | AMO listing refresh: description and version notes cover the Phase 7 activation rule and Phase 8 terminology; version stays 6.0.0.1 unless a package was already uploaded | done 2026-09-23 (see 0.13); version stays 6.0.0.1; review: one wording nit applied |
 
 Milestones 2–5 of §7 are covered by upstream (see 0.1) and are **not** re-implemented.
 
@@ -584,7 +584,21 @@ first-run flow clean). `about:addons` shows "Strata Workspaces", `about:debuggin
 
 ### 0.13 Phase 10 — AMO listing refresh for Phases 7 and 8 (split from Phase 9)
 
-**Status:** planned. Split out of the requested Phase 9: it is a different claim (what the listing says the
+**Status:** done 2026-09-23 — phase commit `7e01e833`, plus the review-fixes commit that carries this line.
+Gate: no code or manifest change, so no build; the bare-"group" grep on `docs/AMO-LISTING.md` shows only
+"tab group(s)" and one file path; summary still 205 characters. Live-Firefox verification (rows 13–18) not
+yet run.
+
+**Version decision (2026-09-23): stays `6.0.0.1`, no bump.** The add-on id changed in Phase 9
+(`strata-workspaces@dacite.dev`), and AMO's no-reuse rule for version numbers is per add-on, so no
+earlier upload under an old id can collide with this one. The open question below is closed.
+
+**Review (local-code-review + code-review, merged):** `/code-review` no findings; `local-code-review`
+nothing ≥80 and one note (60), applied: the in-description quote of the setting dropped
+" (Vivaldi-style)" and now matches the screenshot 5 caption and the live en string. No reuse or
+simplification findings.
+
+*Original plan:* split out of the requested Phase 9: it is a different claim (what the listing says the
 add-on does, not what the add-on is called), and it is reviewed differently (prose read, not grep). One file.
 
 **Version — recommendation: keep `6.0.0.1`.** No package has been uploaded to AMO, and AMO only requires

@@ -39,7 +39,7 @@ Paste-ready text for the AMO submission form. Choose **"On this site"** (listed)
 > - Selecting a tab on the top bar (an ungrouped or pinned tab, or the tab shown beside a collapsed tab
 >   group's header) collapses the open tab group, so the lower row disappears, as in Vivaldi.
 > - Tab groups are only ever collapsed automatically, never opened: you open a tab group from its header.
-> - Both rules can be turned off in Settings ("Keep only one native tab group expanded at a time").
+> - Both rules can be turned off in Settings ("Keep only one native tab group expanded at a time (Vivaldi-style)").
 > - Optional: the project's `userChrome.css` shows the open tab group on its own second row under the tab
 >   bar. Instructions are in the source repository.
 >
